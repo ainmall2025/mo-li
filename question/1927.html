@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="cifnews_page" key="questionDetail" module="b36" page="p2" tag="amazon" data-fetch-property="page_type=详情页;business_module=问答;device_type=pc;$title=亚马逊视频认证预约时间超过规定时间账户会被停用吗-雨果问答;page_terms=问题详情页;item_type=question;item_id=1927;item_title=亚马逊视频认证预约时间超过规定时间账户会被停用吗;item_create_time=2024-11-15 17:35:54.0;item_tag=亚马逊;item_tag_key=amazon;item_provider=新用户20241102170042">
+<title>亚马逊视频认证预约时间超过规定时间账户会被停用吗-雨果问答</title>
+<meta name="keywords" content="亚马逊视频认证预约时间超过规定时间账户会被停用吗"/>
+<meta name="description" content="亚马逊视频认证预约时间超过规定时间账户会被停用吗"/>
+<link href="https://static1.cifnews.com/common/css/ali_iconfont.css?v=5b43ae1222190187e2d01b85b076cdfd" rel="stylesheet"/>
+<link rel="stylesheet" href="https://static1.cifnews.com/plug/element/theme-chalk/index.css?v=d92dc15263215a0835823b6e56a59bd2">
+<link href="https://static1.cifnews.com/plug/swiper/swiper.min.css?v=6c1ec3a038a24ce46e374fc4ba26ea95" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/viewer/viewer.min.css?v=79e5f2c708a17b6876694821ddd5c839" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_common.css?v=85626087304c615cebc3ea2dd5d44efe" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/comment/css/comment.css?v=93454761ebb2de590424c768877a1ed3" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_detail.css?v=6187b3f9f9650370ececb8c55a545c72" rel="stylesheet"/>
+<script src="https://g.alicdn.com/frontend-lib/frontend-lib/2.3.74/antidom.js"></script><script src="https://o.alicdn.com/frontend-lib/common-lib/jquery1.min.js"></script><script src="https://static1.cifnews.com/plug/jquery/jquery.min.js?v=895323ed2f7258af4fae2c738c8aea49"></script>
+<script src="https://static1.cifnews.com/common/js/spm.js?v=de27d901b0c0c9765b95d48314f69abc"></script>
+<script src="https://static1.cifnews.com/common/js/d/d.sensor.js?v=9e2ba45b95d3ce4dfcbc226289aabd9d"></script>
+<script src="https://g.alicdn.com/AWSC/AWSC/awsc.js"></script>
+</head>
+<body>
+<div class="ask-head" v-clock>
+<div class="ask-head__content">
+<a target="_blank" href="../html/2020yearend.html" class="img_index">
+<img src="https://img.cifnews.com/dev/20230207/5f17c47ceb6c423ba56bc56f009b1960.png">
+</a>
+<span class="line"></span>
+<a target="_blank" href="index.html" class="img_question_index">
+<img src="https://img.cifnews.com/dev/20230207/8890b97e46d14a51bf325694ad8317c4.png">
+</a>
+<div class="ask-head__search">
+<input v-model="search" @input="handleSearch" @focus="handleFocus" @blur="handleBlur"></input>
+<div class="btn is-search" @click="gotoSearchPage">搜索答案</div>
+<div class="btn is-ask" @click="openAsk">我要提问</div>
+<div class="ask-head__search--wrap" v-show="search && searchs.length && searchRecommendFlag">
+<div class="item" v-for="(item, index) in searchs" :key="item" @click="chooseItem(item, 'search')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__needlogin" @click="needLogin">
+<img src="https://img.cifnews.com/dev/20230206/079a041cd87848c18eac84692c89ffff.png">
+<span>登录</span>
+</div>
+</div>
+<div class="ask-head__dialog" v-if="askDialog">
+<i class="iconfont icon-guanbi1 guanbi" @click="openAsk"></i>
+<div class="ask-head__dialog--title">
+<i class="iconfont icon-wenhao wenhao"></i>
+<span class="text">提问</span>
+<div class="how-question" @click="questionWarningHandle">如何提问</div>
+</div>
+<div class="ask-head__dialog--input">
+<input placeholder="请输入您要提问的问题（8-40字）" v-model="dialogSearch" maxlength="40" @input="handleSearch($event, 'dialog')">
+<div class="ask-head__dialog--len is-input">
+<span>{{inputLen}}</span>/<span>40</span>
+</div>
+<div class="wrap" v-if="dialogSearch && dialogSearchs.length && recommendFlag">
+<div class="recommand">
+<span>推荐问答</span>
+<span class="close" @click="closeRecommand">关闭</span>
+</div>
+<div class="item" v-for="(item, index) in dialogSearchs" :key="item" @click="chooseItem(item, 'dialog')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__dialog--text">
+<textarea placeholder="请输入问题的补充说明" v-model="dialogText" maxlength="1000" @input="textareaLen = $event.target.value.length;"></textarea>
+<div class="ask-head__dialog--len">
+<span>{{textareaLen}}</span>/<span>1000</span>
+</div>
+</div>
+<div class="ask-head__dialog--upload">
+<el-upload style="display:inline;" list-type="picture-card" :file-list="files" :on-change="fileChange" limit="9" :auto-upload="false" multiple :before-upload="uploadFile" :on-remove="handleRemove">
+<i class="el-icon-plus"></i>
+<div slot="file" slot-scope="{file}">
+<img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+<div class="close" @click="handleRemove(file)">
+<i class="iconfont icon-guanbi1 icon-close"></i>
+</div>
+</div>
+</el-upload>
+<span class="text" v-show="files.length < 9">最多上传<span class="count">9</span>张图</span>
+</div>
+<div class="ask-head__dialog--submit" @click="beforeSubmit">
+提交
+</div>
+</div>
+<div class="ask-head__result" v-if="askInfo">
+<i class="iconfont icon-guanbi1 guanbi" @click="closeResult"></i>
+<img src="https://img.cifnews.com/dev/20230109/dd17f09a90b248c9bf9cb7fb7e50b72d.png" class="icon" v-if="askSuccess">
+<img src="https://img.cifnews.com/dev/20230109/40b34ba72cfd42b482e00789ac5ae14e.png" class="icon" v-else>
+<div class="title" v-if="askSuccess"> 提问成功</div>
+<div class="title" v-else> 等待审核</div>
+<div class="text" v-if="askSuccess">
+<div class="text-small1">提交后将在24小时内获得回答(非工作日可能延期回答)</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text" v-else>
+<div class="text-small1">工作人员将尽快审核您的提问，审核通过后将在24小时内获得回答(非工作日可能延期回答)
+</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text">
+或扫码下载“雨果跨境”app关注提问进度
+</div>
+<div class="scan">
+<img class="cifnews_track_qrCode" data-origin-medium="pc_wenda" src="https://static1.cifnews.com/img/default_qrcode.png">
+</div>
+<div class="info">安装成功后请打开App推送权限</div>
+</div>
+</div>
+<div class="ask-ad cifnews_block" data-cifnews-block-key="abanner" style="display: none;">
+<a class="cifnews_block_linkUrl" target="_blank" href="1927.html">
+<img class="cifnews_block_imgUrl" src="1927.html" data-block-img-width="1000" data-block-img-height="100" />
+</a>
+</div>
+</div>
+<div class="ask-detail" questionId="1927">
+<div class="ask-detail__left">
+<div class="ask-detail__left--question">
+<div class="title">亚马逊视频认证预约时间超过规定时间账户会被停用吗</div>
+<div class="subscribe question-btn1 none">
+<span class="cifnews_number_status" data-cifnews-number-source="subscribe" data-cifnews-number-key="1927" data-cifnews-number-type="question" data-cifnews-login="true">
+<a class="btn cifnews_status_off">+ 关注</a>
+<a class="btn cifnews_status_on is-attentioned" style="display: none;">已关注</a>
+</span>
+</div>
+</div>
+<div class="ask-detail__left--miaoshu">
+<input type="checkbox" id="exp" style="display: none;">
+<div class="content">
+<label for="exp">展开<span class="exp-icon"></span></label>
+<span class="content-span">视频认证预约时间超过规定时间账户会被停用吗</span>
+</div>
+<div class="text is-shenhe question-btn2 none">提问审核中</div>
+<div class="marked">
+<img src="https://img.cifnews.com/dev/20230110/f98c2d286675467b907ad5a4cf8320e3.png">
+<div class="marked-cell">
+<a target="_blank" href="https://www.cifnews.com/question/index/amazon">亚马逊</a>
+</div>
+</div>
+</div>
+<div class="ask-detail__left--answer">
+<div class="head">
+<div class="text" data-len="1">
+<span>1</span>个回答
+</div>
+<div class="line"></div>
+</div>
+<div class="item" data-id="1763">
+<div class="info">
+<img src="https://img.cifnews.com/form/3707/20230109/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image/crop,x_18,y_15,h_355,w_355">
+<div class="name">
+<span>雨果问答小助手</span>
+<span class="time">2024-11-15</span>
+</div>
+</div>
+<input type="checkbox" id="exp_item_0">
+<div class="wrap">
+<div class="content">
+<label for="exp_item_0">阅读全文<i class="iconfont icon-xiajiantou"></i></label><span class="content-span">首次预约超时未参加：
+如果没有提前通知亚马逊并说明情况，此次申诉或验证流程可能会被驳回，但不一定会直接导致账户被停用。通常亚马逊会给卖家一定的机会重新预约视频验证时间，但如果频繁出现这种情况或者卖家无法给出合理的解释，可能会影响到账户的状态。
+如果卖家提前 48 小时及以上发送邮件至亚马逊指定邮箱（如 br-verification@amazon.com）说明无法按时参加并申请重新预约，那么按照新的预约时间进行视频验证即可，一般不会对账户造成不良影响。
+多次预约超时或不配合验证：如果卖家多次出现预约时间超时且没有合理理由，或者在视频验证过程中不配合、提供的信息不完整或不真实等情况，亚马逊可能会认为卖家存在问题，进而可能会采取进一步的措施，包括暂时停用账户，直到卖家按照要求完成验证流程。</span></div>
+</div>
+<div class="likeinfo">
+<div class="like-wrap">
+<div class="cifnews_number_status" data-cifnews-number-type="answer" data-cifnews-number-id="1763" data-cifnews-number-source="like" data-like-type="LIKE" data-cifnews-login="true">
+<div class="cifnews_status_off like is-hover"></div>
+<div class="cifnews_status_on like" style="display: none;"></div>
+<span class="handle-like__count cifnews_number_count" data-cifnews-number-type="answer" data-cifnews-number-source="like" data-cifnews-number-backup="0" data-cifnews-number-display="0" data-cifnews-number-id="1763"></span>
+</div>
+<span class="line"></span>
+<div class="cifnews_number_status container" data-cifnews-number-type="answer" data-cifnews-number-id="1763" data-cifnews-number-source="hate" data-like-type="HATE" data-cifnews-login="true">
+<div class="cifnews_status_off hate is-hover">
+</div>
+<div class="cifnews_status_on hate" style="display: none;">
+</div>
+</div>
+</div>
+<div class="comment">
+<div class="img">
+</div>
+<span class="count"></span>
+<span class="comment-text1">评论</span>
+</div>
+<div class="pack-up">
+收起
+<i class="iconfont icon-shangjiantou"></i>
+</div>
+</div>
+<div class="comment-wrap none">
+<div class="cifnews_comment" data-id="1763" data-type="answer"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="ask-detail__right">
+<div class="ask-detail__right--answer">
+<div class="title">类似回答</div>
+<div class="content">
+</div>
+</div>
+</div>
+</div>
+<script src="https://static1.cifnews.com/common/js/cifnews_common1.min.js?v=3291e81cf00442ac45dad97290e18a20"></script>
+<script src="https://static1.cifnews.com/common/js/ssoapi.js?v=3b204cb817d20e42b217946bfcf00b84" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/plug/vue/vue.min.js?v=0a9a4681294d8c5f476687eea6e74842"></script>
+<script src="https://static1.cifnews.com/plug/element/index.js?v=a4c5f47929d76407bb24614d5614fa05"></script>
+<script src="https://static1.cifnews.com/common/viewer/viewer.min.js?v=3679dfbb07e4b0801060f9468804b6d5"></script>
+<script src="https://static1.cifnews.com/plug/swiper/swiper.min.js?v=bc50849111663577c0eab162d4271bca" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/layer/layer.js?v=556bcef90f730b2e298ebc7f62f93202" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/comment/js/comment.js?v=5300fbb8b8302131a5cf06a6c0727679" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/js/t.js?v=598f04536447abd1023c76eb3056f410" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_common.js?v=9cc03e4effa3c4c21562e9e3353e7b96" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_detail.js?v=9837411bd6cef8522b345c0ca1337066" type="text/javascript"></script>
+</body>
+<script>model ={"id":1927,"title":"\u4E9A\u9A6C\u900A\u89C6\u9891\u8BA4\u8BC1\u9884\u7EA6\u65F6\u95F4\u8D85\u8FC7\u89C4\u5B9A\u65F6\u95F4\u8D26\u6237\u4F1A\u88AB\u505C\u7528\u5417","content":"\u89C6\u9891\u8BA4\u8BC1\u9884\u7EA6\u65F6\u95F4\u8D85\u8FC7\u89C4\u5B9A\u65F6\u95F4\u8D26\u6237\u4F1A\u88AB\u505C\u7528\u5417","imgUrls":[],"status":"ANSWERED","gid":1002536691,"userName":"\u65B0\u7528\u623720241102170042","userHead":"https:\/\/img.cifnews.com\/passport\/2024\/11\/02\/1b9f1afb2760404dbbacf3c11f14b977.png","tags":[{"globalTagKey":"amazon","globalTagTitle":"\u4E9A\u9A6C\u900A","categoryTitle":"\u5E73\u53F0","categoryKey":"platform"}],"tagKeyStr":"amazon","tagTitleStr":"\u4E9A\u9A6C\u900A","answers":[{"id":1763,"content":"\u9996\u6B21\u9884\u7EA6\u8D85\u65F6\u672A\u53C2\u52A0\uFF1A\n\u5982\u679C\u6CA1\u6709\u63D0\u524D\u901A\u77E5\u4E9A\u9A6C\u900A\u5E76\u8BF4\u660E\u60C5\u51B5\uFF0C\u6B64\u6B21\u7533\u8BC9\u6216\u9A8C\u8BC1\u6D41\u7A0B\u53EF\u80FD\u4F1A\u88AB\u9A73\u56DE\uFF0C\u4F46\u4E0D\u4E00\u5B9A\u4F1A\u76F4\u63A5\u5BFC\u81F4\u8D26\u6237\u88AB\u505C\u7528\u3002\u901A\u5E38\u4E9A\u9A6C\u900A\u4F1A\u7ED9\u5356\u5BB6\u4E00\u5B9A\u7684\u673A\u4F1A\u91CD\u65B0\u9884\u7EA6\u89C6\u9891\u9A8C\u8BC1\u65F6\u95F4\uFF0C\u4F46\u5982\u679C\u9891\u7E41\u51FA\u73B0\u8FD9\u79CD\u60C5\u51B5\u6216\u8005\u5356\u5BB6\u65E0\u6CD5\u7ED9\u51FA\u5408\u7406\u7684\u89E3\u91CA\uFF0C\u53EF\u80FD\u4F1A\u5F71\u54CD\u5230\u8D26\u6237\u7684\u72B6\u6001\u3002\n\u5982\u679C\u5356\u5BB6\u63D0\u524D 48 \u5C0F\u65F6\u53CA\u4EE5\u4E0A\u53D1\u9001\u90AE\u4EF6\u81F3\u4E9A\u9A6C\u900A\u6307\u5B9A\u90AE\u7BB1\uFF08\u5982 br-verification@amazon.com\uFF09\u8BF4\u660E\u65E0\u6CD5\u6309\u65F6\u53C2\u52A0\u5E76\u7533\u8BF7\u91CD\u65B0\u9884\u7EA6\uFF0C\u90A3\u4E48\u6309\u7167\u65B0\u7684\u9884\u7EA6\u65F6\u95F4\u8FDB\u884C\u89C6\u9891\u9A8C\u8BC1\u5373\u53EF\uFF0C\u4E00\u822C\u4E0D\u4F1A\u5BF9\u8D26\u6237\u9020\u6210\u4E0D\u826F\u5F71\u54CD\u3002\n\u591A\u6B21\u9884\u7EA6\u8D85\u65F6\u6216\u4E0D\u914D\u5408\u9A8C\u8BC1\uFF1A\u5982\u679C\u5356\u5BB6\u591A\u6B21\u51FA\u73B0\u9884\u7EA6\u65F6\u95F4\u8D85\u65F6\u4E14\u6CA1\u6709\u5408\u7406\u7406\u7531\uFF0C\u6216\u8005\u5728\u89C6\u9891\u9A8C\u8BC1\u8FC7\u7A0B\u4E2D\u4E0D\u914D\u5408\u3001\u63D0\u4F9B\u7684\u4FE1\u606F\u4E0D\u5B8C\u6574\u6216\u4E0D\u771F\u5B9E\u7B49\u60C5\u51B5\uFF0C\u4E9A\u9A6C\u900A\u53EF\u80FD\u4F1A\u8BA4\u4E3A\u5356\u5BB6\u5B58\u5728\u95EE\u9898\uFF0C\u8FDB\u800C\u53EF\u80FD\u4F1A\u91C7\u53D6\u8FDB\u4E00\u6B65\u7684\u63AA\u65BD\uFF0C\u5305\u62EC\u6682\u65F6\u505C\u7528\u8D26\u6237\uFF0C\u76F4\u5230\u5356\u5BB6\u6309\u7167\u8981\u6C42\u5B8C\u6210\u9A8C\u8BC1\u6D41\u7A0B\u3002","questionId":1927,"imgUrls":[],"gid":1001729211,"userName":"\u96E8\u679C\u95EE\u7B54\u5C0F\u52A9\u624B","userHead":"https:\/\/img.cifnews.com\/form\/3707\/20230109\/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image\/crop,x_18,y_15,h_355,w_355","originModel":null,"statCount":{"pv":null,"likeCount":1,"subscribeCount":null,"pvModifiedTime":null},"updatedBy":"\u8BB8\u5EFA\u6210","creator":"\u8BB8\u5EFA\u6210","createTime":"2024-11-15 17:41:06","createTimeStr":"2024-11-15","modifiedTime":"2024-11-16 08:00:01","userCount":null,"isShow":true}],"statCount":{"pv":712,"likeCount":null,"subscribeCount":null,"pvModifiedTime":"2025-07-16 00:00:00"},"pv":712,"createTime":"2024-11-15 17:35:54","createTimeStr":"2024-11-15"};</script>
+</html>

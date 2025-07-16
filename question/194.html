@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="cifnews_page" key="questionDetail" module="b36" page="p2" tag="walmart" data-fetch-property="page_type=详情页;business_module=问答;device_type=pc;$title=如何运营沃尔玛-雨果问答;page_terms=问题详情页;item_type=question;item_id=194;item_title=如何运营沃尔玛;item_create_time=2022-12-13 18:13:08.0;item_tag=沃尔玛;item_tag_key=walmart;item_provider=小西瓜的夏天">
+<title>如何运营沃尔玛-雨果问答</title>
+<meta name="keywords" content="如何运营沃尔玛"/>
+<meta name="description" content="如何运营沃尔玛"/>
+<link href="https://static1.cifnews.com/common/css/ali_iconfont.css?v=5b43ae1222190187e2d01b85b076cdfd" rel="stylesheet"/>
+<link rel="stylesheet" href="https://static1.cifnews.com/plug/element/theme-chalk/index.css?v=d92dc15263215a0835823b6e56a59bd2">
+<link href="https://static1.cifnews.com/plug/swiper/swiper.min.css?v=6c1ec3a038a24ce46e374fc4ba26ea95" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/viewer/viewer.min.css?v=79e5f2c708a17b6876694821ddd5c839" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_common.css?v=85626087304c615cebc3ea2dd5d44efe" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/comment/css/comment.css?v=93454761ebb2de590424c768877a1ed3" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_detail.css?v=6187b3f9f9650370ececb8c55a545c72" rel="stylesheet"/>
+<script src="https://g.alicdn.com/frontend-lib/frontend-lib/2.3.74/antidom.js"></script><script src="https://o.alicdn.com/frontend-lib/common-lib/jquery1.min.js"></script><script src="https://static1.cifnews.com/plug/jquery/jquery.min.js?v=895323ed2f7258af4fae2c738c8aea49"></script>
+<script src="https://static1.cifnews.com/common/js/spm.js?v=de27d901b0c0c9765b95d48314f69abc"></script>
+<script src="https://static1.cifnews.com/common/js/d/d.sensor.js?v=9e2ba45b95d3ce4dfcbc226289aabd9d"></script>
+<script src="https://g.alicdn.com/AWSC/AWSC/awsc.js"></script>
+</head>
+<body>
+<div class="ask-head" v-clock>
+<div class="ask-head__content">
+<a target="_blank" href="../html/2020yearend.html" class="img_index">
+<img src="https://img.cifnews.com/dev/20230207/5f17c47ceb6c423ba56bc56f009b1960.png">
+</a>
+<span class="line"></span>
+<a target="_blank" href="index.html" class="img_question_index">
+<img src="https://img.cifnews.com/dev/20230207/8890b97e46d14a51bf325694ad8317c4.png">
+</a>
+<div class="ask-head__search">
+<input v-model="search" @input="handleSearch" @focus="handleFocus" @blur="handleBlur"></input>
+<div class="btn is-search" @click="gotoSearchPage">搜索答案</div>
+<div class="btn is-ask" @click="openAsk">我要提问</div>
+<div class="ask-head__search--wrap" v-show="search && searchs.length && searchRecommendFlag">
+<div class="item" v-for="(item, index) in searchs" :key="item" @click="chooseItem(item, 'search')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__needlogin" @click="needLogin">
+<img src="https://img.cifnews.com/dev/20230206/079a041cd87848c18eac84692c89ffff.png">
+<span>登录</span>
+</div>
+</div>
+<div class="ask-head__dialog" v-if="askDialog">
+<i class="iconfont icon-guanbi1 guanbi" @click="openAsk"></i>
+<div class="ask-head__dialog--title">
+<i class="iconfont icon-wenhao wenhao"></i>
+<span class="text">提问</span>
+<div class="how-question" @click="questionWarningHandle">如何提问</div>
+</div>
+<div class="ask-head__dialog--input">
+<input placeholder="请输入您要提问的问题（8-40字）" v-model="dialogSearch" maxlength="40" @input="handleSearch($event, 'dialog')">
+<div class="ask-head__dialog--len is-input">
+<span>{{inputLen}}</span>/<span>40</span>
+</div>
+<div class="wrap" v-if="dialogSearch && dialogSearchs.length && recommendFlag">
+<div class="recommand">
+<span>推荐问答</span>
+<span class="close" @click="closeRecommand">关闭</span>
+</div>
+<div class="item" v-for="(item, index) in dialogSearchs" :key="item" @click="chooseItem(item, 'dialog')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__dialog--text">
+<textarea placeholder="请输入问题的补充说明" v-model="dialogText" maxlength="1000" @input="textareaLen = $event.target.value.length;"></textarea>
+<div class="ask-head__dialog--len">
+<span>{{textareaLen}}</span>/<span>1000</span>
+</div>
+</div>
+<div class="ask-head__dialog--upload">
+<el-upload style="display:inline;" list-type="picture-card" :file-list="files" :on-change="fileChange" limit="9" :auto-upload="false" multiple :before-upload="uploadFile" :on-remove="handleRemove">
+<i class="el-icon-plus"></i>
+<div slot="file" slot-scope="{file}">
+<img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+<div class="close" @click="handleRemove(file)">
+<i class="iconfont icon-guanbi1 icon-close"></i>
+</div>
+</div>
+</el-upload>
+<span class="text" v-show="files.length < 9">最多上传<span class="count">9</span>张图</span>
+</div>
+<div class="ask-head__dialog--submit" @click="beforeSubmit">
+提交
+</div>
+</div>
+<div class="ask-head__result" v-if="askInfo">
+<i class="iconfont icon-guanbi1 guanbi" @click="closeResult"></i>
+<img src="https://img.cifnews.com/dev/20230109/dd17f09a90b248c9bf9cb7fb7e50b72d.png" class="icon" v-if="askSuccess">
+<img src="https://img.cifnews.com/dev/20230109/40b34ba72cfd42b482e00789ac5ae14e.png" class="icon" v-else>
+<div class="title" v-if="askSuccess"> 提问成功</div>
+<div class="title" v-else> 等待审核</div>
+<div class="text" v-if="askSuccess">
+<div class="text-small1">提交后将在24小时内获得回答(非工作日可能延期回答)</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text" v-else>
+<div class="text-small1">工作人员将尽快审核您的提问，审核通过后将在24小时内获得回答(非工作日可能延期回答)
+</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text">
+或扫码下载“雨果跨境”app关注提问进度
+</div>
+<div class="scan">
+<img class="cifnews_track_qrCode" data-origin-medium="pc_wenda" src="https://static1.cifnews.com/img/default_qrcode.png">
+</div>
+<div class="info">安装成功后请打开App推送权限</div>
+</div>
+</div>
+<div class="ask-ad cifnews_block" data-cifnews-block-key="abanner" style="display: none;">
+<a class="cifnews_block_linkUrl" target="_blank" href="194.html">
+<img class="cifnews_block_imgUrl" src="194.html" data-block-img-width="1000" data-block-img-height="100" />
+</a>
+</div>
+</div>
+<div class="ask-detail" questionId="194">
+<div class="ask-detail__left">
+<div class="ask-detail__left--question">
+<div class="title">如何运营沃尔玛</div>
+<div class="subscribe question-btn1 none">
+<span class="cifnews_number_status" data-cifnews-number-source="subscribe" data-cifnews-number-key="194" data-cifnews-number-type="question" data-cifnews-login="true">
+<a class="btn cifnews_status_off">+ 关注</a>
+<a class="btn cifnews_status_on is-attentioned" style="display: none;">已关注</a>
+</span>
+</div>
+</div>
+<div class="ask-detail__left--miaoshu">
+<input type="checkbox" id="exp" style="display: none;">
+<div class="text is-shenhe question-btn2 none">提问审核中</div>
+<div class="marked">
+<img src="https://img.cifnews.com/dev/20230110/f98c2d286675467b907ad5a4cf8320e3.png">
+<div class="marked-cell">
+<a target="_blank" href="https://www.cifnews.com/question/index/walmart">沃尔玛</a>
+</div>
+</div>
+</div>
+<div class="ask-detail__left--answer">
+<div class="head">
+<div class="text" data-len="1">
+<span>1</span>个回答
+</div>
+<div class="line"></div>
+</div>
+<div class="item" data-id="194">
+<div class="info">
+<img src="https://img.cifnews.com/form/3707/20230109/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image/crop,x_18,y_15,h_355,w_355">
+<div class="name">
+<span>雨果问答小助手</span>
+<span class="time">2022-12-15</span>
+</div>
+</div>
+<input type="checkbox" id="exp_item_0">
+<div class="wrap">
+<div class="content">
+<label for="exp_item_0">阅读全文<i class="iconfont icon-xiajiantou"></i></label><span class="content-span">1、创建优质产品Listing
+出色的产品Listing可以将随意浏览网页的游客转化为买家。使你的产品Listing脱颖而出，主要有2种做法:
+1）优化产品标题、描述、图片以及制定合适的价格。此外，要记得定期更新你的产品listing。
+2）在沃尔玛上投放广告，来提高产品的知名度。
+2、产品属性
+产品品类决定产品的展示位置，如果弄错产品属性，你的产品将有可能出现在错误的地方。
+产品属性有助于定义产品的品类。只有分对产品品类，才能将产品展示给正确的受众。
+3、标题
+产品标题中应体现出是什么产品。你的产品标题应做到独一无二，产品关键词等用户能够看得懂，以及能够轻松地查找到你的产品。
+4、产品描述
+在产品描述中，你应该填写关于产品的详细信息，包括适用人群、场合、制作材料等。
+5、产品图
+要想获得销量，产品图可以说是成败点。上传产品图要遵守以下沃尔玛平台规则，基本上亚马逊的规则相类似：
+1）产品图应清晰，光线应充足，背景应为白色且产品置于中心。
+2）禁止上传和产品无关的配件。
+3）产品图中禁止包含水印，logo，图形，插图或文字。
+6、关键词
+关键词能够提高产品可见度，潜在客户可以通过该关键词搜索到你的产品。
+7、做好店铺产品的推广测评
+建议新手卖家可以租赁推广系统做好推广测评，测评也是提升销量的有效手段之一，根据店铺产品的情况适当测评，打造爆款，获得平台流量加持，测评可以选择用推广系统养号自测，比外包省心，安全高效成本低，在秋冬季也能销量喜人。上线热门产品、做好listing和产品测评、参加平台促销活动、留意新功能。</span></div>
+</div>
+<div class="likeinfo">
+<div class="like-wrap">
+<div class="cifnews_number_status" data-cifnews-number-type="answer" data-cifnews-number-id="194" data-cifnews-number-source="like" data-like-type="LIKE" data-cifnews-login="true">
+<div class="cifnews_status_off like is-hover"></div>
+<div class="cifnews_status_on like" style="display: none;"></div>
+<span class="handle-like__count cifnews_number_count" data-cifnews-number-type="answer" data-cifnews-number-source="like" data-cifnews-number-backup="0" data-cifnews-number-display="0" data-cifnews-number-id="194"></span>
+</div>
+<span class="line"></span>
+<div class="cifnews_number_status container" data-cifnews-number-type="answer" data-cifnews-number-id="194" data-cifnews-number-source="hate" data-like-type="HATE" data-cifnews-login="true">
+<div class="cifnews_status_off hate is-hover">
+</div>
+<div class="cifnews_status_on hate" style="display: none;">
+</div>
+</div>
+</div>
+<div class="comment">
+<div class="img">
+</div>
+<span class="count"></span>
+<span class="comment-text1">评论</span>
+</div>
+<div class="pack-up">
+收起
+<i class="iconfont icon-shangjiantou"></i>
+</div>
+</div>
+<div class="comment-wrap none">
+<div class="cifnews_comment" data-id="194" data-type="answer"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="ask-detail__right">
+<div class="ask-detail__right--answer">
+<div class="title">类似回答</div>
+<div class="content">
+</div>
+</div>
+</div>
+</div>
+<script src="https://static1.cifnews.com/common/js/cifnews_common1.min.js?v=3291e81cf00442ac45dad97290e18a20"></script>
+<script src="https://static1.cifnews.com/common/js/ssoapi.js?v=3b204cb817d20e42b217946bfcf00b84" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/plug/vue/vue.min.js?v=0a9a4681294d8c5f476687eea6e74842"></script>
+<script src="https://static1.cifnews.com/plug/element/index.js?v=a4c5f47929d76407bb24614d5614fa05"></script>
+<script src="https://static1.cifnews.com/common/viewer/viewer.min.js?v=3679dfbb07e4b0801060f9468804b6d5"></script>
+<script src="https://static1.cifnews.com/plug/swiper/swiper.min.js?v=bc50849111663577c0eab162d4271bca" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/layer/layer.js?v=556bcef90f730b2e298ebc7f62f93202" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/comment/js/comment.js?v=5300fbb8b8302131a5cf06a6c0727679" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/js/t.js?v=598f04536447abd1023c76eb3056f410" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_common.js?v=9cc03e4effa3c4c21562e9e3353e7b96" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_detail.js?v=9837411bd6cef8522b345c0ca1337066" type="text/javascript"></script>
+</body>
+<script>model ={"id":194,"title":"\u5982\u4F55\u8FD0\u8425\u6C83\u5C14\u739B","content":"","imgUrls":[],"status":"ANSWERED","gid":1000328259,"userName":"\u5C0F\u897F\u74DC\u7684\u590F\u5929","userHead":"https:\/\/static1.cifnews.com\/virtual-avatar\/0a\/my_100000366.jpg","tags":[{"globalTagKey":"walmart","globalTagTitle":"\u6C83\u5C14\u739B","categoryTitle":"\u5E73\u53F0","categoryKey":"platform"}],"tagKeyStr":"walmart","tagTitleStr":"\u6C83\u5C14\u739B","answers":[{"id":194,"content":"1\u3001\u521B\u5EFA\u4F18\u8D28\u4EA7\u54C1Listing\n\u51FA\u8272\u7684\u4EA7\u54C1Listing\u53EF\u4EE5\u5C06\u968F\u610F\u6D4F\u89C8\u7F51\u9875\u7684\u6E38\u5BA2\u8F6C\u5316\u4E3A\u4E70\u5BB6\u3002\u4F7F\u4F60\u7684\u4EA7\u54C1Listing\u8131\u9896\u800C\u51FA\uFF0C\u4E3B\u8981\u67092\u79CD\u505A\u6CD5:\n1\uFF09\u4F18\u5316\u4EA7\u54C1\u6807\u9898\u3001\u63CF\u8FF0\u3001\u56FE\u7247\u4EE5\u53CA\u5236\u5B9A\u5408\u9002\u7684\u4EF7\u683C\u3002\u6B64\u5916\uFF0C\u8981\u8BB0\u5F97\u5B9A\u671F\u66F4\u65B0\u4F60\u7684\u4EA7\u54C1listing\u3002\n2\uFF09\u5728\u6C83\u5C14\u739B\u4E0A\u6295\u653E\u5E7F\u544A\uFF0C\u6765\u63D0\u9AD8\u4EA7\u54C1\u7684\u77E5\u540D\u5EA6\u3002\n2\u3001\u4EA7\u54C1\u5C5E\u6027\n\u4EA7\u54C1\u54C1\u7C7B\u51B3\u5B9A\u4EA7\u54C1\u7684\u5C55\u793A\u4F4D\u7F6E\uFF0C\u5982\u679C\u5F04\u9519\u4EA7\u54C1\u5C5E\u6027\uFF0C\u4F60\u7684\u4EA7\u54C1\u5C06\u6709\u53EF\u80FD\u51FA\u73B0\u5728\u9519\u8BEF\u7684\u5730\u65B9\u3002\n\u4EA7\u54C1\u5C5E\u6027\u6709\u52A9\u4E8E\u5B9A\u4E49\u4EA7\u54C1\u7684\u54C1\u7C7B\u3002\u53EA\u6709\u5206\u5BF9\u4EA7\u54C1\u54C1\u7C7B\uFF0C\u624D\u80FD\u5C06\u4EA7\u54C1\u5C55\u793A\u7ED9\u6B63\u786E\u7684\u53D7\u4F17\u3002\n3\u3001\u6807\u9898\n\u4EA7\u54C1\u6807\u9898\u4E2D\u5E94\u4F53\u73B0\u51FA\u662F\u4EC0\u4E48\u4EA7\u54C1\u3002\u4F60\u7684\u4EA7\u54C1\u6807\u9898\u5E94\u505A\u5230\u72EC\u4E00\u65E0\u4E8C\uFF0C\u4EA7\u54C1\u5173\u952E\u8BCD\u7B49\u7528\u6237\u80FD\u591F\u770B\u5F97\u61C2\uFF0C\u4EE5\u53CA\u80FD\u591F\u8F7B\u677E\u5730\u67E5\u627E\u5230\u4F60\u7684\u4EA7\u54C1\u3002\n4\u3001\u4EA7\u54C1\u63CF\u8FF0\n\u5728\u4EA7\u54C1\u63CF\u8FF0\u4E2D\uFF0C\u4F60\u5E94\u8BE5\u586B\u5199\u5173\u4E8E\u4EA7\u54C1\u7684\u8BE6\u7EC6\u4FE1\u606F\uFF0C\u5305\u62EC\u9002\u7528\u4EBA\u7FA4\u3001\u573A\u5408\u3001\u5236\u4F5C\u6750\u6599\u7B49\u3002\n5\u3001\u4EA7\u54C1\u56FE\n\u8981\u60F3\u83B7\u5F97\u9500\u91CF\uFF0C\u4EA7\u54C1\u56FE\u53EF\u4EE5\u8BF4\u662F\u6210\u8D25\u70B9\u3002\u4E0A\u4F20\u4EA7\u54C1\u56FE\u8981\u9075\u5B88\u4EE5\u4E0B\u6C83\u5C14\u739B\u5E73\u53F0\u89C4\u5219\uFF0C\u57FA\u672C\u4E0A\u4E9A\u9A6C\u900A\u7684\u89C4\u5219\u76F8\u7C7B\u4F3C\uFF1A\n1\uFF09\u4EA7\u54C1\u56FE\u5E94\u6E05\u6670\uFF0C\u5149\u7EBF\u5E94\u5145\u8DB3\uFF0C\u80CC\u666F\u5E94\u4E3A\u767D\u8272\u4E14\u4EA7\u54C1\u7F6E\u4E8E\u4E2D\u5FC3\u3002\n2\uFF09\u7981\u6B62\u4E0A\u4F20\u548C\u4EA7\u54C1\u65E0\u5173\u7684\u914D\u4EF6\u3002\n3\uFF09\u4EA7\u54C1\u56FE\u4E2D\u7981\u6B62\u5305\u542B\u6C34\u5370\uFF0Clogo\uFF0C\u56FE\u5F62\uFF0C\u63D2\u56FE\u6216\u6587\u5B57\u3002\n6\u3001\u5173\u952E\u8BCD\n\u5173\u952E\u8BCD\u80FD\u591F\u63D0\u9AD8\u4EA7\u54C1\u53EF\u89C1\u5EA6\uFF0C\u6F5C\u5728\u5BA2\u6237\u53EF\u4EE5\u901A\u8FC7\u8BE5\u5173\u952E\u8BCD\u641C\u7D22\u5230\u4F60\u7684\u4EA7\u54C1\u3002\n7\u3001\u505A\u597D\u5E97\u94FA\u4EA7\u54C1\u7684\u63A8\u5E7F\u6D4B\u8BC4\n\u5EFA\u8BAE\u65B0\u624B\u5356\u5BB6\u53EF\u4EE5\u79DF\u8D41\u63A8\u5E7F\u7CFB\u7EDF\u505A\u597D\u63A8\u5E7F\u6D4B\u8BC4\uFF0C\u6D4B\u8BC4\u4E5F\u662F\u63D0\u5347\u9500\u91CF\u7684\u6709\u6548\u624B\u6BB5\u4E4B\u4E00\uFF0C\u6839\u636E\u5E97\u94FA\u4EA7\u54C1\u7684\u60C5\u51B5\u9002\u5F53\u6D4B\u8BC4\uFF0C\u6253\u9020\u7206\u6B3E\uFF0C\u83B7\u5F97\u5E73\u53F0\u6D41\u91CF\u52A0\u6301\uFF0C\u6D4B\u8BC4\u53EF\u4EE5\u9009\u62E9\u7528\u63A8\u5E7F\u7CFB\u7EDF\u517B\u53F7\u81EA\u6D4B\uFF0C\u6BD4\u5916\u5305\u7701\u5FC3\uFF0C\u5B89\u5168\u9AD8\u6548\u6210\u672C\u4F4E\uFF0C\u5728\u79CB\u51AC\u5B63\u4E5F\u80FD\u9500\u91CF\u559C\u4EBA\u3002\u4E0A\u7EBF\u70ED\u95E8\u4EA7\u54C1\u3001\u505A\u597Dlisting\u548C\u4EA7\u54C1\u6D4B\u8BC4\u3001\u53C2\u52A0\u5E73\u53F0\u4FC3\u9500\u6D3B\u52A8\u3001\u7559\u610F\u65B0\u529F\u80FD\u3002","questionId":194,"imgUrls":[],"gid":1001729211,"userName":"\u96E8\u679C\u95EE\u7B54\u5C0F\u52A9\u624B","userHead":"https:\/\/img.cifnews.com\/form\/3707\/20230109\/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image\/crop,x_18,y_15,h_355,w_355","originModel":null,"statCount":null,"updatedBy":null,"creator":"\u8D75\u632F\u5174(excel\u5BFC\u5165)","createTime":"2022-12-15 16:39:25","createTimeStr":"2022-12-15","modifiedTime":"2022-12-15 16:39:25","userCount":null,"isShow":true}],"statCount":{"pv":1712,"likeCount":null,"subscribeCount":null,"pvModifiedTime":"2025-07-16 00:00:00"},"pv":1712,"createTime":"2022-12-13 18:13:08","createTimeStr":"2022-12-13"};</script>
+</html>

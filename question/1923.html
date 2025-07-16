@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="cifnews_page" key="questionDetail" module="b36" page="p2" tag="pinduoduocrossborder" data-fetch-property="page_type=详情页;business_module=问答;device_type=pc;$title=Temu面单上面的收货地址与实际的签收地址不匹配是什么原因造成的，有什么解决方案-雨果问答;page_terms=问题详情页;item_type=question;item_id=1923;item_title=Temu面单上面的收货地址与实际的签收地址不匹配是什么原因造成的，有什么解决方案;item_create_time=2024-11-15 17:20:07.0;item_tag=Temu;item_tag_key=pinduoduocrossborder;item_provider=小敏">
+<title>Temu面单上面的收货地址与实际的签收地址不匹配是什么原因造成的，有什么解决方案-雨果问答</title>
+<meta name="keywords" content="Temu面单上面的收货地址与实际的签收地址不匹配是什么原因造成的，有什么解决方案"/>
+<meta name="description" content="Temu面单上面的收货地址与实际的签收地址不匹配是什么原因造成的，有什么解决方案"/>
+<link href="https://static1.cifnews.com/common/css/ali_iconfont.css?v=5b43ae1222190187e2d01b85b076cdfd" rel="stylesheet"/>
+<link rel="stylesheet" href="https://static1.cifnews.com/plug/element/theme-chalk/index.css?v=d92dc15263215a0835823b6e56a59bd2">
+<link href="https://static1.cifnews.com/plug/swiper/swiper.min.css?v=6c1ec3a038a24ce46e374fc4ba26ea95" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/viewer/viewer.min.css?v=79e5f2c708a17b6876694821ddd5c839" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_common.css?v=85626087304c615cebc3ea2dd5d44efe" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/comment/css/comment.css?v=93454761ebb2de590424c768877a1ed3" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_detail.css?v=6187b3f9f9650370ececb8c55a545c72" rel="stylesheet"/>
+<script src="https://g.alicdn.com/frontend-lib/frontend-lib/2.3.74/antidom.js"></script><script src="https://o.alicdn.com/frontend-lib/common-lib/jquery1.min.js"></script><script src="https://static1.cifnews.com/plug/jquery/jquery.min.js?v=895323ed2f7258af4fae2c738c8aea49"></script>
+<script src="https://static1.cifnews.com/common/js/spm.js?v=de27d901b0c0c9765b95d48314f69abc"></script>
+<script src="https://static1.cifnews.com/common/js/d/d.sensor.js?v=9e2ba45b95d3ce4dfcbc226289aabd9d"></script>
+<script src="https://g.alicdn.com/AWSC/AWSC/awsc.js"></script>
+</head>
+<body>
+<div class="ask-head" v-clock>
+<div class="ask-head__content">
+<a target="_blank" href="../html/2020yearend.html" class="img_index">
+<img src="https://img.cifnews.com/dev/20230207/5f17c47ceb6c423ba56bc56f009b1960.png">
+</a>
+<span class="line"></span>
+<a target="_blank" href="index.html" class="img_question_index">
+<img src="https://img.cifnews.com/dev/20230207/8890b97e46d14a51bf325694ad8317c4.png">
+</a>
+<div class="ask-head__search">
+<input v-model="search" @input="handleSearch" @focus="handleFocus" @blur="handleBlur"></input>
+<div class="btn is-search" @click="gotoSearchPage">搜索答案</div>
+<div class="btn is-ask" @click="openAsk">我要提问</div>
+<div class="ask-head__search--wrap" v-show="search && searchs.length && searchRecommendFlag">
+<div class="item" v-for="(item, index) in searchs" :key="item" @click="chooseItem(item, 'search')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__needlogin" @click="needLogin">
+<img src="https://img.cifnews.com/dev/20230206/079a041cd87848c18eac84692c89ffff.png">
+<span>登录</span>
+</div>
+</div>
+<div class="ask-head__dialog" v-if="askDialog">
+<i class="iconfont icon-guanbi1 guanbi" @click="openAsk"></i>
+<div class="ask-head__dialog--title">
+<i class="iconfont icon-wenhao wenhao"></i>
+<span class="text">提问</span>
+<div class="how-question" @click="questionWarningHandle">如何提问</div>
+</div>
+<div class="ask-head__dialog--input">
+<input placeholder="请输入您要提问的问题（8-40字）" v-model="dialogSearch" maxlength="40" @input="handleSearch($event, 'dialog')">
+<div class="ask-head__dialog--len is-input">
+<span>{{inputLen}}</span>/<span>40</span>
+</div>
+<div class="wrap" v-if="dialogSearch && dialogSearchs.length && recommendFlag">
+<div class="recommand">
+<span>推荐问答</span>
+<span class="close" @click="closeRecommand">关闭</span>
+</div>
+<div class="item" v-for="(item, index) in dialogSearchs" :key="item" @click="chooseItem(item, 'dialog')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__dialog--text">
+<textarea placeholder="请输入问题的补充说明" v-model="dialogText" maxlength="1000" @input="textareaLen = $event.target.value.length;"></textarea>
+<div class="ask-head__dialog--len">
+<span>{{textareaLen}}</span>/<span>1000</span>
+</div>
+</div>
+<div class="ask-head__dialog--upload">
+<el-upload style="display:inline;" list-type="picture-card" :file-list="files" :on-change="fileChange" limit="9" :auto-upload="false" multiple :before-upload="uploadFile" :on-remove="handleRemove">
+<i class="el-icon-plus"></i>
+<div slot="file" slot-scope="{file}">
+<img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+<div class="close" @click="handleRemove(file)">
+<i class="iconfont icon-guanbi1 icon-close"></i>
+</div>
+</div>
+</el-upload>
+<span class="text" v-show="files.length < 9">最多上传<span class="count">9</span>张图</span>
+</div>
+<div class="ask-head__dialog--submit" @click="beforeSubmit">
+提交
+</div>
+</div>
+<div class="ask-head__result" v-if="askInfo">
+<i class="iconfont icon-guanbi1 guanbi" @click="closeResult"></i>
+<img src="https://img.cifnews.com/dev/20230109/dd17f09a90b248c9bf9cb7fb7e50b72d.png" class="icon" v-if="askSuccess">
+<img src="https://img.cifnews.com/dev/20230109/40b34ba72cfd42b482e00789ac5ae14e.png" class="icon" v-else>
+<div class="title" v-if="askSuccess"> 提问成功</div>
+<div class="title" v-else> 等待审核</div>
+<div class="text" v-if="askSuccess">
+<div class="text-small1">提交后将在24小时内获得回答(非工作日可能延期回答)</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text" v-else>
+<div class="text-small1">工作人员将尽快审核您的提问，审核通过后将在24小时内获得回答(非工作日可能延期回答)
+</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text">
+或扫码下载“雨果跨境”app关注提问进度
+</div>
+<div class="scan">
+<img class="cifnews_track_qrCode" data-origin-medium="pc_wenda" src="https://static1.cifnews.com/img/default_qrcode.png">
+</div>
+<div class="info">安装成功后请打开App推送权限</div>
+</div>
+</div>
+<div class="ask-ad cifnews_block" data-cifnews-block-key="abanner" style="display: none;">
+<a class="cifnews_block_linkUrl" target="_blank" href="1923.html">
+<img class="cifnews_block_imgUrl" src="1923.html" data-block-img-width="1000" data-block-img-height="100" />
+</a>
+</div>
+</div>
+<div class="ask-detail" questionId="1923">
+<div class="ask-detail__left">
+<div class="ask-detail__left--question">
+<div class="title">Temu面单上面的收货地址与实际的签收地址不匹配是什么原因造成的，有什么解决方案</div>
+<div class="subscribe question-btn1 none">
+<span class="cifnews_number_status" data-cifnews-number-source="subscribe" data-cifnews-number-key="1923" data-cifnews-number-type="question" data-cifnews-login="true">
+<a class="btn cifnews_status_off">+ 关注</a>
+<a class="btn cifnews_status_on is-attentioned" style="display: none;">已关注</a>
+</span>
+</div>
+</div>
+<div class="ask-detail__left--miaoshu">
+<input type="checkbox" id="exp" style="display: none;">
+<div class="text is-shenhe question-btn2 none">提问审核中</div>
+<div class="marked">
+<img src="https://img.cifnews.com/dev/20230110/f98c2d286675467b907ad5a4cf8320e3.png">
+<div class="marked-cell">
+<a target="_blank" href="https://www.cifnews.com/question/index/pinduoduocrossborder">Temu</a>
+</div>
+</div>
+</div>
+<div class="ask-detail__left--empty">
+<img src="https://img.cifnews.com/dev/20230214/35bcec153e314bf48ed7d96bdef4cd22.png">
+<span class="text">暂无回答，看看其它问答吧~</span>
+</div>
+</div>
+<div class="ask-detail__right">
+<div class="ask-detail__right--answer">
+<div class="title">类似回答</div>
+<div class="content">
+</div>
+</div>
+</div>
+</div>
+<script src="https://static1.cifnews.com/common/js/cifnews_common1.min.js?v=3291e81cf00442ac45dad97290e18a20"></script>
+<script src="https://static1.cifnews.com/common/js/ssoapi.js?v=3b204cb817d20e42b217946bfcf00b84" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/plug/vue/vue.min.js?v=0a9a4681294d8c5f476687eea6e74842"></script>
+<script src="https://static1.cifnews.com/plug/element/index.js?v=a4c5f47929d76407bb24614d5614fa05"></script>
+<script src="https://static1.cifnews.com/common/viewer/viewer.min.js?v=3679dfbb07e4b0801060f9468804b6d5"></script>
+<script src="https://static1.cifnews.com/plug/swiper/swiper.min.js?v=bc50849111663577c0eab162d4271bca" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/layer/layer.js?v=556bcef90f730b2e298ebc7f62f93202" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/comment/js/comment.js?v=5300fbb8b8302131a5cf06a6c0727679" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/js/t.js?v=598f04536447abd1023c76eb3056f410" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_common.js?v=9cc03e4effa3c4c21562e9e3353e7b96" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_detail.js?v=9837411bd6cef8522b345c0ca1337066" type="text/javascript"></script>
+</body>
+<script>model ={"id":1923,"title":"Temu\u9762\u5355\u4E0A\u9762\u7684\u6536\u8D27\u5730\u5740\u4E0E\u5B9E\u9645\u7684\u7B7E\u6536\u5730\u5740\u4E0D\u5339\u914D\u662F\u4EC0\u4E48\u539F\u56E0\u9020\u6210\u7684\uFF0C\u6709\u4EC0\u4E48\u89E3\u51B3\u65B9\u6848","content":"","imgUrls":[],"status":"SUCCESS","gid":1002511535,"userName":"\u5C0F\u654F","userHead":"https:\/\/img.cifnews.com\/passport\/2024\/09\/24\/c43eb7e122d94c0eacbe9789926fcde4.jpg","tags":[{"globalTagKey":"pinduoduocrossborder","globalTagTitle":"Temu","categoryTitle":"\u68C0\u7D22\u7ED3\u679C-\u51711\u4E2A","categoryKey":"results"}],"tagKeyStr":"pinduoduocrossborder","tagTitleStr":"Temu","answers":[],"statCount":{"pv":179,"likeCount":null,"subscribeCount":null,"pvModifiedTime":"2025-07-16 00:00:00"},"pv":179,"createTime":"2024-11-15 17:20:07","createTimeStr":"2024-11-15"};</script>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="cifnews_page" key="questionDetail" module="b36" page="p2" tag="aliexpress" data-fetch-property="page_type=详情页;business_module=问答;device_type=pc;$title=速卖通家居类目-雨果问答;page_terms=问题详情页;item_type=question;item_id=607;item_title=速卖通家居类目;item_create_time=2023-01-10 18:28:25.0;item_tag=速卖通;item_tag_key=aliexpress;item_provider=昕昕">
+<title>速卖通家居类目-雨果问答</title>
+<meta name="keywords" content="速卖通家居类目"/>
+<meta name="description" content="速卖通家居类目"/>
+<link href="https://static1.cifnews.com/common/css/ali_iconfont.css?v=5b43ae1222190187e2d01b85b076cdfd" rel="stylesheet"/>
+<link rel="stylesheet" href="https://static1.cifnews.com/plug/element/theme-chalk/index.css?v=d92dc15263215a0835823b6e56a59bd2">
+<link href="https://static1.cifnews.com/plug/swiper/swiper.min.css?v=6c1ec3a038a24ce46e374fc4ba26ea95" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/viewer/viewer.min.css?v=79e5f2c708a17b6876694821ddd5c839" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_common.css?v=85626087304c615cebc3ea2dd5d44efe" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/comment/css/comment.css?v=93454761ebb2de590424c768877a1ed3" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_detail.css?v=6187b3f9f9650370ececb8c55a545c72" rel="stylesheet"/>
+<script src="https://g.alicdn.com/frontend-lib/frontend-lib/2.3.74/antidom.js"></script><script src="https://o.alicdn.com/frontend-lib/common-lib/jquery1.min.js"></script><script src="https://static1.cifnews.com/plug/jquery/jquery.min.js?v=895323ed2f7258af4fae2c738c8aea49"></script>
+<script src="https://static1.cifnews.com/common/js/spm.js?v=de27d901b0c0c9765b95d48314f69abc"></script>
+<script src="https://static1.cifnews.com/common/js/d/d.sensor.js?v=9e2ba45b95d3ce4dfcbc226289aabd9d"></script>
+<script src="https://g.alicdn.com/AWSC/AWSC/awsc.js"></script>
+</head>
+<body>
+<div class="ask-head" v-clock>
+<div class="ask-head__content">
+<a target="_blank" href="../html/2020yearend.html" class="img_index">
+<img src="https://img.cifnews.com/dev/20230207/5f17c47ceb6c423ba56bc56f009b1960.png">
+</a>
+<span class="line"></span>
+<a target="_blank" href="index.html" class="img_question_index">
+<img src="https://img.cifnews.com/dev/20230207/8890b97e46d14a51bf325694ad8317c4.png">
+</a>
+<div class="ask-head__search">
+<input v-model="search" @input="handleSearch" @focus="handleFocus" @blur="handleBlur"></input>
+<div class="btn is-search" @click="gotoSearchPage">搜索答案</div>
+<div class="btn is-ask" @click="openAsk">我要提问</div>
+<div class="ask-head__search--wrap" v-show="search && searchs.length && searchRecommendFlag">
+<div class="item" v-for="(item, index) in searchs" :key="item" @click="chooseItem(item, 'search')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__needlogin" @click="needLogin">
+<img src="https://img.cifnews.com/dev/20230206/079a041cd87848c18eac84692c89ffff.png">
+<span>登录</span>
+</div>
+</div>
+<div class="ask-head__dialog" v-if="askDialog">
+<i class="iconfont icon-guanbi1 guanbi" @click="openAsk"></i>
+<div class="ask-head__dialog--title">
+<i class="iconfont icon-wenhao wenhao"></i>
+<span class="text">提问</span>
+<div class="how-question" @click="questionWarningHandle">如何提问</div>
+</div>
+<div class="ask-head__dialog--input">
+<input placeholder="请输入您要提问的问题（8-40字）" v-model="dialogSearch" maxlength="40" @input="handleSearch($event, 'dialog')">
+<div class="ask-head__dialog--len is-input">
+<span>{{inputLen}}</span>/<span>40</span>
+</div>
+<div class="wrap" v-if="dialogSearch && dialogSearchs.length && recommendFlag">
+<div class="recommand">
+<span>推荐问答</span>
+<span class="close" @click="closeRecommand">关闭</span>
+</div>
+<div class="item" v-for="(item, index) in dialogSearchs" :key="item" @click="chooseItem(item, 'dialog')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__dialog--text">
+<textarea placeholder="请输入问题的补充说明" v-model="dialogText" maxlength="1000" @input="textareaLen = $event.target.value.length;"></textarea>
+<div class="ask-head__dialog--len">
+<span>{{textareaLen}}</span>/<span>1000</span>
+</div>
+</div>
+<div class="ask-head__dialog--upload">
+<el-upload style="display:inline;" list-type="picture-card" :file-list="files" :on-change="fileChange" limit="9" :auto-upload="false" multiple :before-upload="uploadFile" :on-remove="handleRemove">
+<i class="el-icon-plus"></i>
+<div slot="file" slot-scope="{file}">
+<img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+<div class="close" @click="handleRemove(file)">
+<i class="iconfont icon-guanbi1 icon-close"></i>
+</div>
+</div>
+</el-upload>
+<span class="text" v-show="files.length < 9">最多上传<span class="count">9</span>张图</span>
+</div>
+<div class="ask-head__dialog--submit" @click="beforeSubmit">
+提交
+</div>
+</div>
+<div class="ask-head__result" v-if="askInfo">
+<i class="iconfont icon-guanbi1 guanbi" @click="closeResult"></i>
+<img src="https://img.cifnews.com/dev/20230109/dd17f09a90b248c9bf9cb7fb7e50b72d.png" class="icon" v-if="askSuccess">
+<img src="https://img.cifnews.com/dev/20230109/40b34ba72cfd42b482e00789ac5ae14e.png" class="icon" v-else>
+<div class="title" v-if="askSuccess"> 提问成功</div>
+<div class="title" v-else> 等待审核</div>
+<div class="text" v-if="askSuccess">
+<div class="text-small1">提交后将在24小时内获得回答(非工作日可能延期回答)</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text" v-else>
+<div class="text-small1">工作人员将尽快审核您的提问，审核通过后将在24小时内获得回答(非工作日可能延期回答)
+</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text">
+或扫码下载“雨果跨境”app关注提问进度
+</div>
+<div class="scan">
+<img class="cifnews_track_qrCode" data-origin-medium="pc_wenda" src="https://static1.cifnews.com/img/default_qrcode.png">
+</div>
+<div class="info">安装成功后请打开App推送权限</div>
+</div>
+</div>
+<div class="ask-ad cifnews_block" data-cifnews-block-key="abanner" style="display: none;">
+<a class="cifnews_block_linkUrl" target="_blank" href="607.html">
+<img class="cifnews_block_imgUrl" src="607.html" data-block-img-width="1000" data-block-img-height="100" />
+</a>
+</div>
+</div>
+<div class="ask-detail" questionId="607">
+<div class="ask-detail__left">
+<div class="ask-detail__left--question">
+<div class="title">速卖通家居类目</div>
+<div class="subscribe question-btn1 none">
+<span class="cifnews_number_status" data-cifnews-number-source="subscribe" data-cifnews-number-key="607" data-cifnews-number-type="question" data-cifnews-login="true">
+<a class="btn cifnews_status_off">+ 关注</a>
+<a class="btn cifnews_status_on is-attentioned" style="display: none;">已关注</a>
+</span>
+</div>
+</div>
+<div class="ask-detail__left--miaoshu">
+<input type="checkbox" id="exp" style="display: none;">
+<div class="text is-shenhe question-btn2 none">提问审核中</div>
+<div class="marked">
+<img src="https://img.cifnews.com/dev/20230110/f98c2d286675467b907ad5a4cf8320e3.png">
+<div class="marked-cell">
+<a target="_blank" href="https://www.cifnews.com/question/index/aliexpress">速卖通</a>
+</div>
+</div>
+</div>
+<div class="ask-detail__left--answer">
+<div class="head">
+<div class="text" data-len="1">
+<span>1</span>个回答
+</div>
+<div class="line"></div>
+</div>
+<div class="item" data-id="607">
+<div class="info">
+<img src="https://img.cifnews.com/form/3707/20230109/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image/crop,x_18,y_15,h_355,w_355">
+<div class="name">
+<span>雨果问答小助手</span>
+<span class="time">2023-01-11</span>
+</div>
+</div>
+<input type="checkbox" id="exp_item_0">
+<div class="wrap">
+<div class="content">
+<label for="exp_item_0">阅读全文<i class="iconfont icon-xiajiantou"></i></label><span class="content-span">速卖通家居类目怎么规划
+1、了解重点品类的推广情况，重点品类下的店铺主要以专业店铺居多，长尾品类的商品线需要重点关注，发展过程中缺乏专业店铺，未来商品会大量受到门槛影响，针对长尾品类的推广策略，需要跟重点品类结合起来。
+2、厨房热门品类推广情况：通过品类管理，口碑相传，稳定上新，合理价格，以及优化服务。可以对厨房热门品类下的产品进行爆款的打造。并且还具有灵活的补品空间，推广方面，色彩感增强，功能性加强。
+其品类从单一逐渐发展多元，通过快速上新，发展为专业店铺，做好品类维护及服务提升;强化类目优化，把更多装饰性的产品展示出来;强调氛围营造，可通过墙面、桌面、空间、风格等维度来做个性化营销。
+除此之外还有节庆用品品类、家纺床品品类均为热销、ART DIY品类。其中家纺潜力品类可以通过爆品30-40美金左右爆款进行引流，并且同系列添加多sku，丰富细节，如3D，儿童，特殊花型等。</span></div>
+</div>
+<div class="likeinfo">
+<div class="like-wrap">
+<div class="cifnews_number_status" data-cifnews-number-type="answer" data-cifnews-number-id="607" data-cifnews-number-source="like" data-like-type="LIKE" data-cifnews-login="true">
+<div class="cifnews_status_off like is-hover"></div>
+<div class="cifnews_status_on like" style="display: none;"></div>
+<span class="handle-like__count cifnews_number_count" data-cifnews-number-type="answer" data-cifnews-number-source="like" data-cifnews-number-backup="0" data-cifnews-number-display="0" data-cifnews-number-id="607"></span>
+</div>
+<span class="line"></span>
+<div class="cifnews_number_status container" data-cifnews-number-type="answer" data-cifnews-number-id="607" data-cifnews-number-source="hate" data-like-type="HATE" data-cifnews-login="true">
+<div class="cifnews_status_off hate is-hover">
+</div>
+<div class="cifnews_status_on hate" style="display: none;">
+</div>
+</div>
+</div>
+<div class="comment">
+<div class="img">
+</div>
+<span class="count"></span>
+<span class="comment-text1">评论</span>
+</div>
+<div class="pack-up">
+收起
+<i class="iconfont icon-shangjiantou"></i>
+</div>
+</div>
+<div class="comment-wrap none">
+<div class="cifnews_comment" data-id="607" data-type="answer"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="ask-detail__right">
+<div class="ask-detail__right--answer">
+<div class="title">类似回答</div>
+<div class="content">
+</div>
+</div>
+</div>
+</div>
+<script src="https://static1.cifnews.com/common/js/cifnews_common1.min.js?v=3291e81cf00442ac45dad97290e18a20"></script>
+<script src="https://static1.cifnews.com/common/js/ssoapi.js?v=3b204cb817d20e42b217946bfcf00b84" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/plug/vue/vue.min.js?v=0a9a4681294d8c5f476687eea6e74842"></script>
+<script src="https://static1.cifnews.com/plug/element/index.js?v=a4c5f47929d76407bb24614d5614fa05"></script>
+<script src="https://static1.cifnews.com/common/viewer/viewer.min.js?v=3679dfbb07e4b0801060f9468804b6d5"></script>
+<script src="https://static1.cifnews.com/plug/swiper/swiper.min.js?v=bc50849111663577c0eab162d4271bca" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/layer/layer.js?v=556bcef90f730b2e298ebc7f62f93202" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/comment/js/comment.js?v=5300fbb8b8302131a5cf06a6c0727679" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/js/t.js?v=598f04536447abd1023c76eb3056f410" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_common.js?v=9cc03e4effa3c4c21562e9e3353e7b96" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_detail.js?v=9837411bd6cef8522b345c0ca1337066" type="text/javascript"></script>
+</body>
+<script>model ={"id":607,"title":"\u901F\u5356\u901A\u5BB6\u5C45\u7C7B\u76EE","content":"","imgUrls":[],"status":"ANSWERED","gid":1000411373,"userName":"\u6615\u6615","userHead":"https:\/\/static1.cifnews.com\/virtual-avatar\/0a\/2021-03-22_140320.jpg","tags":[{"globalTagKey":"aliexpress","globalTagTitle":"\u901F\u5356\u901A","categoryTitle":"\u5E73\u53F0","categoryKey":"platform"}],"tagKeyStr":"aliexpress","tagTitleStr":"\u901F\u5356\u901A","answers":[{"id":607,"content":"\u901F\u5356\u901A\u5BB6\u5C45\u7C7B\u76EE\u600E\u4E48\u89C4\u5212\n1\u3001\u4E86\u89E3\u91CD\u70B9\u54C1\u7C7B\u7684\u63A8\u5E7F\u60C5\u51B5\uFF0C\u91CD\u70B9\u54C1\u7C7B\u4E0B\u7684\u5E97\u94FA\u4E3B\u8981\u4EE5\u4E13\u4E1A\u5E97\u94FA\u5C45\u591A\uFF0C\u957F\u5C3E\u54C1\u7C7B\u7684\u5546\u54C1\u7EBF\u9700\u8981\u91CD\u70B9\u5173\u6CE8\uFF0C\u53D1\u5C55\u8FC7\u7A0B\u4E2D\u7F3A\u4E4F\u4E13\u4E1A\u5E97\u94FA\uFF0C\u672A\u6765\u5546\u54C1\u4F1A\u5927\u91CF\u53D7\u5230\u95E8\u69DB\u5F71\u54CD\uFF0C\u9488\u5BF9\u957F\u5C3E\u54C1\u7C7B\u7684\u63A8\u5E7F\u7B56\u7565\uFF0C\u9700\u8981\u8DDF\u91CD\u70B9\u54C1\u7C7B\u7ED3\u5408\u8D77\u6765\u3002\n2\u3001\u53A8\u623F\u70ED\u95E8\u54C1\u7C7B\u63A8\u5E7F\u60C5\u51B5\uFF1A\u901A\u8FC7\u54C1\u7C7B\u7BA1\u7406\uFF0C\u53E3\u7891\u76F8\u4F20\uFF0C\u7A33\u5B9A\u4E0A\u65B0\uFF0C\u5408\u7406\u4EF7\u683C\uFF0C\u4EE5\u53CA\u4F18\u5316\u670D\u52A1\u3002\u53EF\u4EE5\u5BF9\u53A8\u623F\u70ED\u95E8\u54C1\u7C7B\u4E0B\u7684\u4EA7\u54C1\u8FDB\u884C\u7206\u6B3E\u7684\u6253\u9020\u3002\u5E76\u4E14\u8FD8\u5177\u6709\u7075\u6D3B\u7684\u8865\u54C1\u7A7A\u95F4\uFF0C\u63A8\u5E7F\u65B9\u9762\uFF0C\u8272\u5F69\u611F\u589E\u5F3A\uFF0C\u529F\u80FD\u6027\u52A0\u5F3A\u3002\n\u5176\u54C1\u7C7B\u4ECE\u5355\u4E00\u9010\u6E10\u53D1\u5C55\u591A\u5143\uFF0C\u901A\u8FC7\u5FEB\u901F\u4E0A\u65B0\uFF0C\u53D1\u5C55\u4E3A\u4E13\u4E1A\u5E97\u94FA\uFF0C\u505A\u597D\u54C1\u7C7B\u7EF4\u62A4\u53CA\u670D\u52A1\u63D0\u5347;\u5F3A\u5316\u7C7B\u76EE\u4F18\u5316\uFF0C\u628A\u66F4\u591A\u88C5\u9970\u6027\u7684\u4EA7\u54C1\u5C55\u793A\u51FA\u6765;\u5F3A\u8C03\u6C1B\u56F4\u8425\u9020\uFF0C\u53EF\u901A\u8FC7\u5899\u9762\u3001\u684C\u9762\u3001\u7A7A\u95F4\u3001\u98CE\u683C\u7B49\u7EF4\u5EA6\u6765\u505A\u4E2A\u6027\u5316\u8425\u9500\u3002\n\u9664\u6B64\u4E4B\u5916\u8FD8\u6709\u8282\u5E86\u7528\u54C1\u54C1\u7C7B\u3001\u5BB6\u7EBA\u5E8A\u54C1\u54C1\u7C7B\u5747\u4E3A\u70ED\u9500\u3001ART DIY\u54C1\u7C7B\u3002\u5176\u4E2D\u5BB6\u7EBA\u6F5C\u529B\u54C1\u7C7B\u53EF\u4EE5\u901A\u8FC7\u7206\u54C130-40\u7F8E\u91D1\u5DE6\u53F3\u7206\u6B3E\u8FDB\u884C\u5F15\u6D41\uFF0C\u5E76\u4E14\u540C\u7CFB\u5217\u6DFB\u52A0\u591Asku\uFF0C\u4E30\u5BCC\u7EC6\u8282\uFF0C\u59823D\uFF0C\u513F\u7AE5\uFF0C\u7279\u6B8A\u82B1\u578B\u7B49\u3002","questionId":607,"imgUrls":[],"gid":1001729211,"userName":"\u96E8\u679C\u95EE\u7B54\u5C0F\u52A9\u624B","userHead":"https:\/\/img.cifnews.com\/form\/3707\/20230109\/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image\/crop,x_18,y_15,h_355,w_355","originModel":null,"statCount":null,"updatedBy":null,"creator":"\u8D75\u632F\u5174(excel\u5BFC\u5165)","createTime":"2023-01-11 18:28:22","createTimeStr":"2023-01-11","modifiedTime":"2023-01-11 18:28:22","userCount":null,"isShow":true}],"statCount":{"pv":809,"likeCount":null,"subscribeCount":null,"pvModifiedTime":"2025-07-16 00:00:00"},"pv":809,"createTime":"2023-01-10 18:28:25","createTimeStr":"2023-01-10"};</script>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="cifnews_page" key="questionDetail" module="b36" page="p2" tag="dhgate" data-fetch-property="page_type=详情页;business_module=问答;device_type=pc;$title=敦煌网，apple侵权的条件有哪些，要非常细，还有就是标题能有phone吗-雨果问答;page_terms=问题详情页;item_type=question;item_id=852;item_title=敦煌网，apple侵权的条件有哪些，要非常细，还有就是标题能有phone吗;item_create_time=2023-03-14 22:34:51.0;item_tag=敦煌网;item_tag_key=dhgate;item_provider=微信用户">
+<title>敦煌网，apple侵权的条件有哪些，要非常细，还有就是标题能有phone吗-雨果问答</title>
+<meta name="keywords" content="敦煌网，apple侵权的条件有哪些，要非常细，还有就是标题能有phone吗"/>
+<meta name="description" content="敦煌网，apple侵权的条件有哪些，要非常细，还有就是标题能有phone吗"/>
+<link href="https://static1.cifnews.com/common/css/ali_iconfont.css?v=5b43ae1222190187e2d01b85b076cdfd" rel="stylesheet"/>
+<link rel="stylesheet" href="https://static1.cifnews.com/plug/element/theme-chalk/index.css?v=d92dc15263215a0835823b6e56a59bd2">
+<link href="https://static1.cifnews.com/plug/swiper/swiper.min.css?v=6c1ec3a038a24ce46e374fc4ba26ea95" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/viewer/viewer.min.css?v=79e5f2c708a17b6876694821ddd5c839" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_common.css?v=85626087304c615cebc3ea2dd5d44efe" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/comment/css/comment.css?v=93454761ebb2de590424c768877a1ed3" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_detail.css?v=6187b3f9f9650370ececb8c55a545c72" rel="stylesheet"/>
+<script src="https://g.alicdn.com/frontend-lib/frontend-lib/2.3.74/antidom.js"></script><script src="https://o.alicdn.com/frontend-lib/common-lib/jquery1.min.js"></script><script src="https://static1.cifnews.com/plug/jquery/jquery.min.js?v=895323ed2f7258af4fae2c738c8aea49"></script>
+<script src="https://static1.cifnews.com/common/js/spm.js?v=de27d901b0c0c9765b95d48314f69abc"></script>
+<script src="https://static1.cifnews.com/common/js/d/d.sensor.js?v=9e2ba45b95d3ce4dfcbc226289aabd9d"></script>
+<script src="https://g.alicdn.com/AWSC/AWSC/awsc.js"></script>
+</head>
+<body>
+<div class="ask-head" v-clock>
+<div class="ask-head__content">
+<a target="_blank" href="../html/2020yearend.html" class="img_index">
+<img src="https://img.cifnews.com/dev/20230207/5f17c47ceb6c423ba56bc56f009b1960.png">
+</a>
+<span class="line"></span>
+<a target="_blank" href="index.html" class="img_question_index">
+<img src="https://img.cifnews.com/dev/20230207/8890b97e46d14a51bf325694ad8317c4.png">
+</a>
+<div class="ask-head__search">
+<input v-model="search" @input="handleSearch" @focus="handleFocus" @blur="handleBlur"></input>
+<div class="btn is-search" @click="gotoSearchPage">搜索答案</div>
+<div class="btn is-ask" @click="openAsk">我要提问</div>
+<div class="ask-head__search--wrap" v-show="search && searchs.length && searchRecommendFlag">
+<div class="item" v-for="(item, index) in searchs" :key="item" @click="chooseItem(item, 'search')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__needlogin" @click="needLogin">
+<img src="https://img.cifnews.com/dev/20230206/079a041cd87848c18eac84692c89ffff.png">
+<span>登录</span>
+</div>
+</div>
+<div class="ask-head__dialog" v-if="askDialog">
+<i class="iconfont icon-guanbi1 guanbi" @click="openAsk"></i>
+<div class="ask-head__dialog--title">
+<i class="iconfont icon-wenhao wenhao"></i>
+<span class="text">提问</span>
+<div class="how-question" @click="questionWarningHandle">如何提问</div>
+</div>
+<div class="ask-head__dialog--input">
+<input placeholder="请输入您要提问的问题（8-40字）" v-model="dialogSearch" maxlength="40" @input="handleSearch($event, 'dialog')">
+<div class="ask-head__dialog--len is-input">
+<span>{{inputLen}}</span>/<span>40</span>
+</div>
+<div class="wrap" v-if="dialogSearch && dialogSearchs.length && recommendFlag">
+<div class="recommand">
+<span>推荐问答</span>
+<span class="close" @click="closeRecommand">关闭</span>
+</div>
+<div class="item" v-for="(item, index) in dialogSearchs" :key="item" @click="chooseItem(item, 'dialog')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__dialog--text">
+<textarea placeholder="请输入问题的补充说明" v-model="dialogText" maxlength="1000" @input="textareaLen = $event.target.value.length;"></textarea>
+<div class="ask-head__dialog--len">
+<span>{{textareaLen}}</span>/<span>1000</span>
+</div>
+</div>
+<div class="ask-head__dialog--upload">
+<el-upload style="display:inline;" list-type="picture-card" :file-list="files" :on-change="fileChange" limit="9" :auto-upload="false" multiple :before-upload="uploadFile" :on-remove="handleRemove">
+<i class="el-icon-plus"></i>
+<div slot="file" slot-scope="{file}">
+<img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+<div class="close" @click="handleRemove(file)">
+<i class="iconfont icon-guanbi1 icon-close"></i>
+</div>
+</div>
+</el-upload>
+<span class="text" v-show="files.length < 9">最多上传<span class="count">9</span>张图</span>
+</div>
+<div class="ask-head__dialog--submit" @click="beforeSubmit">
+提交
+</div>
+</div>
+<div class="ask-head__result" v-if="askInfo">
+<i class="iconfont icon-guanbi1 guanbi" @click="closeResult"></i>
+<img src="https://img.cifnews.com/dev/20230109/dd17f09a90b248c9bf9cb7fb7e50b72d.png" class="icon" v-if="askSuccess">
+<img src="https://img.cifnews.com/dev/20230109/40b34ba72cfd42b482e00789ac5ae14e.png" class="icon" v-else>
+<div class="title" v-if="askSuccess"> 提问成功</div>
+<div class="title" v-else> 等待审核</div>
+<div class="text" v-if="askSuccess">
+<div class="text-small1">提交后将在24小时内获得回答(非工作日可能延期回答)</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text" v-else>
+<div class="text-small1">工作人员将尽快审核您的提问，审核通过后将在24小时内获得回答(非工作日可能延期回答)
+</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text">
+或扫码下载“雨果跨境”app关注提问进度
+</div>
+<div class="scan">
+<img class="cifnews_track_qrCode" data-origin-medium="pc_wenda" src="https://static1.cifnews.com/img/default_qrcode.png">
+</div>
+<div class="info">安装成功后请打开App推送权限</div>
+</div>
+</div>
+<div class="ask-ad cifnews_block" data-cifnews-block-key="abanner" style="display: none;">
+<a class="cifnews_block_linkUrl" target="_blank" href="852.html">
+<img class="cifnews_block_imgUrl" src="852.html" data-block-img-width="1000" data-block-img-height="100" />
+</a>
+</div>
+</div>
+<div class="ask-detail" questionId="852">
+<div class="ask-detail__left">
+<div class="ask-detail__left--question">
+<div class="title">敦煌网，apple侵权的条件有哪些，要非常细，还有就是标题能有phone吗</div>
+<div class="subscribe question-btn1 none">
+<span class="cifnews_number_status" data-cifnews-number-source="subscribe" data-cifnews-number-key="852" data-cifnews-number-type="question" data-cifnews-login="true">
+<a class="btn cifnews_status_off">+ 关注</a>
+<a class="btn cifnews_status_on is-attentioned" style="display: none;">已关注</a>
+</span>
+</div>
+</div>
+<div class="ask-detail__left--miaoshu">
+<input type="checkbox" id="exp" style="display: none;">
+<div class="text is-shenhe question-btn2 none">提问审核中</div>
+<div class="marked">
+<img src="https://img.cifnews.com/dev/20230110/f98c2d286675467b907ad5a4cf8320e3.png">
+<div class="marked-cell">
+<a target="_blank" href="https://www.cifnews.com/question/index/dhgate">敦煌网</a>
+</div>
+</div>
+</div>
+<div class="ask-detail__left--answer">
+<div class="head">
+<div class="text" data-len="1">
+<span>1</span>个回答
+</div>
+<div class="line"></div>
+</div>
+<div class="item" data-id="841">
+<div class="info">
+<img src="https://img.cifnews.com/form/3707/20230109/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image/crop,x_18,y_15,h_355,w_355">
+<div class="name">
+<span>雨果问答小助手</span>
+<span class="time">2023-03-15</span>
+</div>
+</div>
+<input type="checkbox" id="exp_item_0">
+<div class="wrap">
+<div class="content">
+<label for="exp_item_0">阅读全文<i class="iconfont icon-xiajiantou"></i></label><span class="content-span">敦煌网尊重和保护知识产权，在平台销售品牌产品的卖家，需先提供销售该品牌的合法权利
+证明。常见的侵权问题有：
+1.产品为侵权品牌
+2.产品图片或产品描述中使用官网图片
+3.产品图片有修改、涂抹痕迹或者故意遮挡不展示logo部位。
+4.手机屏幕上出现iTunes、appstores、safari、iPod、setting、photo、mapping等图标（包
+括ios7的图标），手机背面出现designedbyapple...，或展示中有iPhone的手机盒。
+5.已有注册外观专利的手机附件
+6.已有注册外观专利和版权的手机
+7.Apple公司已注册的图形商标（下图标红处）以及已注册关键词lightning
+8.标题或描述中含有品牌注册产品线词、系列词
+9.Apple公司已注册外观专利，如充电装置、耳机、8pin插头数据线等（无论产品整体外
+观是什么形状，只要产品带有8pin的插头，均视为侵权品）
+10.形似Apple的手机产品
+11.标题或描述中写有ForApple(iPhone、iPhone4|4s|5|5s|5c等)的充电器、适配器产品，展
+示中或描述中不得含有数据线。
+关于APPLE品牌知识产权规则解读，可参考：
+https://seller.dhgate.com/policynew/zhuanti/c_1301.html
+卖家违规案例分析如下：</span></div>
+</div>
+<div class="pic">
+<img class="img" src="https://img.cifnews.com/dev/20230315/ae74649965e14cefa8dbc04fa45b9005.jpeg"/>
+</div>
+<div class="likeinfo">
+<div class="like-wrap">
+<div class="cifnews_number_status" data-cifnews-number-type="answer" data-cifnews-number-id="841" data-cifnews-number-source="like" data-like-type="LIKE" data-cifnews-login="true">
+<div class="cifnews_status_off like is-hover"></div>
+<div class="cifnews_status_on like" style="display: none;"></div>
+<span class="handle-like__count cifnews_number_count" data-cifnews-number-type="answer" data-cifnews-number-source="like" data-cifnews-number-backup="0" data-cifnews-number-display="0" data-cifnews-number-id="841"></span>
+</div>
+<span class="line"></span>
+<div class="cifnews_number_status container" data-cifnews-number-type="answer" data-cifnews-number-id="841" data-cifnews-number-source="hate" data-like-type="HATE" data-cifnews-login="true">
+<div class="cifnews_status_off hate is-hover">
+</div>
+<div class="cifnews_status_on hate" style="display: none;">
+</div>
+</div>
+</div>
+<div class="comment">
+<div class="img">
+</div>
+<span class="count"></span>
+<span class="comment-text1">评论</span>
+</div>
+<div class="pack-up">
+收起
+<i class="iconfont icon-shangjiantou"></i>
+</div>
+</div>
+<div class="comment-wrap none">
+<div class="cifnews_comment" data-id="841" data-type="answer"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="ask-detail__right">
+<div class="ask-detail__right--answer">
+<div class="title">类似回答</div>
+<div class="content">
+</div>
+</div>
+</div>
+</div>
+<script src="https://static1.cifnews.com/common/js/cifnews_common1.min.js?v=3291e81cf00442ac45dad97290e18a20"></script>
+<script src="https://static1.cifnews.com/common/js/ssoapi.js?v=3b204cb817d20e42b217946bfcf00b84" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/plug/vue/vue.min.js?v=0a9a4681294d8c5f476687eea6e74842"></script>
+<script src="https://static1.cifnews.com/plug/element/index.js?v=a4c5f47929d76407bb24614d5614fa05"></script>
+<script src="https://static1.cifnews.com/common/viewer/viewer.min.js?v=3679dfbb07e4b0801060f9468804b6d5"></script>
+<script src="https://static1.cifnews.com/plug/swiper/swiper.min.js?v=bc50849111663577c0eab162d4271bca" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/layer/layer.js?v=556bcef90f730b2e298ebc7f62f93202" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/comment/js/comment.js?v=5300fbb8b8302131a5cf06a6c0727679" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/js/t.js?v=598f04536447abd1023c76eb3056f410" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_common.js?v=9cc03e4effa3c4c21562e9e3353e7b96" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_detail.js?v=9837411bd6cef8522b345c0ca1337066" type="text/javascript"></script>
+</body>
+<script>model ={"id":852,"title":"\u6566\u714C\u7F51\uFF0Capple\u4FB5\u6743\u7684\u6761\u4EF6\u6709\u54EA\u4E9B\uFF0C\u8981\u975E\u5E38\u7EC6\uFF0C\u8FD8\u6709\u5C31\u662F\u6807\u9898\u80FD\u6709phone\u5417","content":"","imgUrls":[],"status":"ANSWERED","gid":1002098459,"userName":"\u5FAE\u4FE1\u7528\u6237","userHead":"https:\/\/img.cifnews.com\/passport\/2023\/02\/22\/467c80cfecf64b348db2227c6b4f76d2.cn\/mmopen\/vi_32\/pogewh4miho4nibh0klmecnjjgxquq24zeagt4poc6icriccvgksyxwibcpq4bwmiaigug1icwxaqx6grc9vemzoj8rg\/132","tags":[{"globalTagKey":"dhgate","globalTagTitle":"\u6566\u714C\u7F51","categoryTitle":"\u5E73\u53F0","categoryKey":"platform"}],"tagKeyStr":"dhgate","tagTitleStr":"\u6566\u714C\u7F51","answers":[{"id":841,"content":"\u6566\u714C\u7F51\u5C0A\u91CD\u548C\u4FDD\u62A4\u77E5\u8BC6\u4EA7\u6743\uFF0C\u5728\u5E73\u53F0\u9500\u552E\u54C1\u724C\u4EA7\u54C1\u7684\u5356\u5BB6\uFF0C\u9700\u5148\u63D0\u4F9B\u9500\u552E\u8BE5\u54C1\u724C\u7684\u5408\u6CD5\u6743\u5229\n\u8BC1\u660E\u3002\u5E38\u89C1\u7684\u4FB5\u6743\u95EE\u9898\u6709\uFF1A\n1.\u4EA7\u54C1\u4E3A\u4FB5\u6743\u54C1\u724C\n2.\u4EA7\u54C1\u56FE\u7247\u6216\u4EA7\u54C1\u63CF\u8FF0\u4E2D\u4F7F\u7528\u5B98\u7F51\u56FE\u7247\n3.\u4EA7\u54C1\u56FE\u7247\u6709\u4FEE\u6539\u3001\u6D82\u62B9\u75D5\u8FF9\u6216\u8005\u6545\u610F\u906E\u6321\u4E0D\u5C55\u793Alogo\u90E8\u4F4D\u3002\n4.\u624B\u673A\u5C4F\u5E55\u4E0A\u51FA\u73B0iTunes\u3001appstores\u3001safari\u3001iPod\u3001setting\u3001photo\u3001mapping\u7B49\u56FE\u6807\uFF08\u5305\n\u62ECios7\u7684\u56FE\u6807\uFF09\uFF0C\u624B\u673A\u80CC\u9762\u51FA\u73B0designedbyapple...\uFF0C\u6216\u5C55\u793A\u4E2D\u6709iPhone\u7684\u624B\u673A\u76D2\u3002\n5.\u5DF2\u6709\u6CE8\u518C\u5916\u89C2\u4E13\u5229\u7684\u624B\u673A\u9644\u4EF6\n6.\u5DF2\u6709\u6CE8\u518C\u5916\u89C2\u4E13\u5229\u548C\u7248\u6743\u7684\u624B\u673A\n7.Apple\u516C\u53F8\u5DF2\u6CE8\u518C\u7684\u56FE\u5F62\u5546\u6807\uFF08\u4E0B\u56FE\u6807\u7EA2\u5904\uFF09\u4EE5\u53CA\u5DF2\u6CE8\u518C\u5173\u952E\u8BCDlightning\n8.\u6807\u9898\u6216\u63CF\u8FF0\u4E2D\u542B\u6709\u54C1\u724C\u6CE8\u518C\u4EA7\u54C1\u7EBF\u8BCD\u3001\u7CFB\u5217\u8BCD\n9.Apple\u516C\u53F8\u5DF2\u6CE8\u518C\u5916\u89C2\u4E13\u5229\uFF0C\u5982\u5145\u7535\u88C5\u7F6E\u3001\u8033\u673A\u30018pin\u63D2\u5934\u6570\u636E\u7EBF\u7B49\uFF08\u65E0\u8BBA\u4EA7\u54C1\u6574\u4F53\u5916\n\u89C2\u662F\u4EC0\u4E48\u5F62\u72B6\uFF0C\u53EA\u8981\u4EA7\u54C1\u5E26\u67098pin\u7684\u63D2\u5934\uFF0C\u5747\u89C6\u4E3A\u4FB5\u6743\u54C1\uFF09\n10.\u5F62\u4F3CApple\u7684\u624B\u673A\u4EA7\u54C1\n11.\u6807\u9898\u6216\u63CF\u8FF0\u4E2D\u5199\u6709ForApple(iPhone\u3001iPhone4|4s|5|5s|5c\u7B49)\u7684\u5145\u7535\u5668\u3001\u9002\u914D\u5668\u4EA7\u54C1\uFF0C\u5C55\n\u793A\u4E2D\u6216\u63CF\u8FF0\u4E2D\u4E0D\u5F97\u542B\u6709\u6570\u636E\u7EBF\u3002\n\u5173\u4E8EAPPLE\u54C1\u724C\u77E5\u8BC6\u4EA7\u6743\u89C4\u5219\u89E3\u8BFB\uFF0C\u53EF\u53C2\u8003\uFF1A\nhttps:\/\/seller.dhgate.com\/policynew\/zhuanti\/c_1301.html\n\u5356\u5BB6\u8FDD\u89C4\u6848\u4F8B\u5206\u6790\u5982\u4E0B\uFF1A","questionId":852,"imgUrls":["https:\/\/img.cifnews.com\/dev\/20230315\/ae74649965e14cefa8dbc04fa45b9005.jpeg"],"gid":1001729211,"userName":"\u96E8\u679C\u95EE\u7B54\u5C0F\u52A9\u624B","userHead":"https:\/\/img.cifnews.com\/form\/3707\/20230109\/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image\/crop,x_18,y_15,h_355,w_355","originModel":null,"statCount":null,"updatedBy":"\u9648\u6C38\u5FB7","creator":"\u9648\u6C38\u5FB7","createTime":"2023-03-15 19:51:37","createTimeStr":"2023-03-15","modifiedTime":"2023-03-15 19:51:37","userCount":null,"isShow":true}],"statCount":{"pv":885,"likeCount":null,"subscribeCount":null,"pvModifiedTime":"2025-07-16 00:00:00"},"pv":885,"createTime":"2023-03-14 22:34:51","createTimeStr":"2023-03-14"};</script>
+</html>

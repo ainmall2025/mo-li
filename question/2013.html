@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="cifnews_page" key="questionDetail" module="b36" page="p2" tag="emagmarketplace" data-fetch-property="page_type=详情页;business_module=问答;device_type=pc;$title=eMAG FBE费用怎么算-雨果问答;page_terms=问题详情页;item_type=question;item_id=2013;item_title=eMAG FBE费用怎么算;item_create_time=2024-08-31 10:00:00.0;item_tag=eMAG;item_tag_key=emagmarketplace;item_provider=Scilence">
+<title>eMAG FBE费用怎么算-雨果问答</title>
+<meta name="keywords" content="eMAG FBE费用怎么算"/>
+<meta name="description" content="eMAG FBE费用怎么算"/>
+<link href="https://static1.cifnews.com/common/css/ali_iconfont.css?v=5b43ae1222190187e2d01b85b076cdfd" rel="stylesheet"/>
+<link rel="stylesheet" href="https://static1.cifnews.com/plug/element/theme-chalk/index.css?v=d92dc15263215a0835823b6e56a59bd2">
+<link href="https://static1.cifnews.com/plug/swiper/swiper.min.css?v=6c1ec3a038a24ce46e374fc4ba26ea95" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/viewer/viewer.min.css?v=79e5f2c708a17b6876694821ddd5c839" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_common.css?v=85626087304c615cebc3ea2dd5d44efe" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/comment/css/comment.css?v=93454761ebb2de590424c768877a1ed3" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_detail.css?v=6187b3f9f9650370ececb8c55a545c72" rel="stylesheet"/>
+<script src="https://g.alicdn.com/frontend-lib/frontend-lib/2.3.74/antidom.js"></script><script src="https://o.alicdn.com/frontend-lib/common-lib/jquery1.min.js"></script><script src="https://static1.cifnews.com/plug/jquery/jquery.min.js?v=895323ed2f7258af4fae2c738c8aea49"></script>
+<script src="https://static1.cifnews.com/common/js/spm.js?v=de27d901b0c0c9765b95d48314f69abc"></script>
+<script src="https://static1.cifnews.com/common/js/d/d.sensor.js?v=9e2ba45b95d3ce4dfcbc226289aabd9d"></script>
+<script src="https://g.alicdn.com/AWSC/AWSC/awsc.js"></script>
+</head>
+<body>
+<div class="ask-head" v-clock>
+<div class="ask-head__content">
+<a target="_blank" href="../html/2020yearend.html" class="img_index">
+<img src="https://img.cifnews.com/dev/20230207/5f17c47ceb6c423ba56bc56f009b1960.png">
+</a>
+<span class="line"></span>
+<a target="_blank" href="index.html" class="img_question_index">
+<img src="https://img.cifnews.com/dev/20230207/8890b97e46d14a51bf325694ad8317c4.png">
+</a>
+<div class="ask-head__search">
+<input v-model="search" @input="handleSearch" @focus="handleFocus" @blur="handleBlur"></input>
+<div class="btn is-search" @click="gotoSearchPage">搜索答案</div>
+<div class="btn is-ask" @click="openAsk">我要提问</div>
+<div class="ask-head__search--wrap" v-show="search && searchs.length && searchRecommendFlag">
+<div class="item" v-for="(item, index) in searchs" :key="item" @click="chooseItem(item, 'search')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__needlogin" @click="needLogin">
+<img src="https://img.cifnews.com/dev/20230206/079a041cd87848c18eac84692c89ffff.png">
+<span>登录</span>
+</div>
+</div>
+<div class="ask-head__dialog" v-if="askDialog">
+<i class="iconfont icon-guanbi1 guanbi" @click="openAsk"></i>
+<div class="ask-head__dialog--title">
+<i class="iconfont icon-wenhao wenhao"></i>
+<span class="text">提问</span>
+<div class="how-question" @click="questionWarningHandle">如何提问</div>
+</div>
+<div class="ask-head__dialog--input">
+<input placeholder="请输入您要提问的问题（8-40字）" v-model="dialogSearch" maxlength="40" @input="handleSearch($event, 'dialog')">
+<div class="ask-head__dialog--len is-input">
+<span>{{inputLen}}</span>/<span>40</span>
+</div>
+<div class="wrap" v-if="dialogSearch && dialogSearchs.length && recommendFlag">
+<div class="recommand">
+<span>推荐问答</span>
+<span class="close" @click="closeRecommand">关闭</span>
+</div>
+<div class="item" v-for="(item, index) in dialogSearchs" :key="item" @click="chooseItem(item, 'dialog')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__dialog--text">
+<textarea placeholder="请输入问题的补充说明" v-model="dialogText" maxlength="1000" @input="textareaLen = $event.target.value.length;"></textarea>
+<div class="ask-head__dialog--len">
+<span>{{textareaLen}}</span>/<span>1000</span>
+</div>
+</div>
+<div class="ask-head__dialog--upload">
+<el-upload style="display:inline;" list-type="picture-card" :file-list="files" :on-change="fileChange" limit="9" :auto-upload="false" multiple :before-upload="uploadFile" :on-remove="handleRemove">
+<i class="el-icon-plus"></i>
+<div slot="file" slot-scope="{file}">
+<img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+<div class="close" @click="handleRemove(file)">
+<i class="iconfont icon-guanbi1 icon-close"></i>
+</div>
+</div>
+</el-upload>
+<span class="text" v-show="files.length < 9">最多上传<span class="count">9</span>张图</span>
+</div>
+<div class="ask-head__dialog--submit" @click="beforeSubmit">
+提交
+</div>
+</div>
+<div class="ask-head__result" v-if="askInfo">
+<i class="iconfont icon-guanbi1 guanbi" @click="closeResult"></i>
+<img src="https://img.cifnews.com/dev/20230109/dd17f09a90b248c9bf9cb7fb7e50b72d.png" class="icon" v-if="askSuccess">
+<img src="https://img.cifnews.com/dev/20230109/40b34ba72cfd42b482e00789ac5ae14e.png" class="icon" v-else>
+<div class="title" v-if="askSuccess"> 提问成功</div>
+<div class="title" v-else> 等待审核</div>
+<div class="text" v-if="askSuccess">
+<div class="text-small1">提交后将在24小时内获得回答(非工作日可能延期回答)</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text" v-else>
+<div class="text-small1">工作人员将尽快审核您的提问，审核通过后将在24小时内获得回答(非工作日可能延期回答)
+</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text">
+或扫码下载“雨果跨境”app关注提问进度
+</div>
+<div class="scan">
+<img class="cifnews_track_qrCode" data-origin-medium="pc_wenda" src="https://static1.cifnews.com/img/default_qrcode.png">
+</div>
+<div class="info">安装成功后请打开App推送权限</div>
+</div>
+</div>
+<div class="ask-ad cifnews_block" data-cifnews-block-key="abanner" style="display: none;">
+<a class="cifnews_block_linkUrl" target="_blank" href="2013.html">
+<img class="cifnews_block_imgUrl" src="2013.html" data-block-img-width="1000" data-block-img-height="100" />
+</a>
+</div>
+</div>
+<div class="ask-detail" questionId="2013">
+<div class="ask-detail__left">
+<div class="ask-detail__left--question">
+<div class="title">eMAG FBE费用怎么算</div>
+<div class="subscribe question-btn1 none">
+<span class="cifnews_number_status" data-cifnews-number-source="subscribe" data-cifnews-number-key="2013" data-cifnews-number-type="question" data-cifnews-login="true">
+<a class="btn cifnews_status_off">+ 关注</a>
+<a class="btn cifnews_status_on is-attentioned" style="display: none;">已关注</a>
+</span>
+</div>
+</div>
+<div class="ask-detail__left--miaoshu">
+<input type="checkbox" id="exp" style="display: none;">
+<div class="text is-shenhe question-btn2 none">提问审核中</div>
+<div class="marked">
+<img src="https://img.cifnews.com/dev/20230110/f98c2d286675467b907ad5a4cf8320e3.png">
+<div class="marked-cell">
+<a target="_blank" href="https://www.cifnews.com/question/index/emagmarketplace">eMAG</a>
+</div>
+</div>
+</div>
+<div class="ask-detail__left--answer">
+<div class="head">
+<div class="text" data-len="1">
+<span>1</span>个回答
+</div>
+<div class="line"></div>
+</div>
+<div class="item" data-id="1847">
+<div class="info">
+<img src="https://img.cifnews.com/form/3707/20230109/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image/crop,x_18,y_15,h_355,w_355">
+<div class="name">
+<span>雨果问答小助手</span>
+<span class="time">2024-09-01</span>
+</div>
+</div>
+<input type="checkbox" id="exp_item_0">
+<div class="wrap">
+<div class="content">
+<label for="exp_item_0">阅读全文<i class="iconfont icon-xiajiantou"></i></label><span class="content-span">费用构成要素
+1.产品重量（Weight）：以克（grams）为单位，影响运输和处理成本。
+2.产品尺寸（Dimensions）：包括长度（Length）、宽度（Width）和高度（Height），通常以毫米（mm）为单位，决定仓储空间的使用。
+3.存储费用：根据占用的体积（立方米m³）和存储时间计算。
+4.订单处理费（Order Fee）：与订单数量相关的固定费用。
+5.仓库下架费（Removal Fee）：商品从仓库移除时产生的费用。
+6.销毁费（Disposal Fee）：对于无法再销售的商品处理费用。
+费用计算步骤
+1.确定产品信息：记录每个产品的重量和尺寸。
+2.计算体积：根据产品的长宽高计算体积（m³）。
+3.选择币种和汇率：根据交易币种和当前汇率将费用转换为适用货币。
+4.选择时间：确定商品存储的时间范围，冬季（January - September）费用可能略高。
+5.应用PLC代码：PLC（Product Lookup Code）是emag平台对每个产品类别的特定编码，关联具体的费用标准。
+特定费用项目
+· 订单处理费：根据PLC代码和订单数量计算。
+· 仓库下架费和销毁费：根据商品的PLC代码和处理数量确定。
+存储费用
+存储费用按照占用的体积（m³）和天数计算，分为两个季节标准：
+· 旺季（October - December）：费用较高，以1.66 RON/m³/day为标准。
+· 淡季（January - September）：费用较低，以1 RON/m³/day为标准。
+注意事项
+· 确保所有产品信息准确无误，以免影响费用计算。
+· 考虑到货币汇率波动，定期更新汇率以确保费用转换的准确性。
+· 利用emag平台提供的工具和资源，以获得更详细的费用估算和优化建议。</span></div>
+</div>
+<div class="likeinfo">
+<div class="like-wrap">
+<div class="cifnews_number_status" data-cifnews-number-type="answer" data-cifnews-number-id="1847" data-cifnews-number-source="like" data-like-type="LIKE" data-cifnews-login="true">
+<div class="cifnews_status_off like is-hover"></div>
+<div class="cifnews_status_on like" style="display: none;"></div>
+<span class="handle-like__count cifnews_number_count" data-cifnews-number-type="answer" data-cifnews-number-source="like" data-cifnews-number-backup="0" data-cifnews-number-display="0" data-cifnews-number-id="1847"></span>
+</div>
+<span class="line"></span>
+<div class="cifnews_number_status container" data-cifnews-number-type="answer" data-cifnews-number-id="1847" data-cifnews-number-source="hate" data-like-type="HATE" data-cifnews-login="true">
+<div class="cifnews_status_off hate is-hover">
+</div>
+<div class="cifnews_status_on hate" style="display: none;">
+</div>
+</div>
+</div>
+<div class="comment">
+<div class="img">
+</div>
+<span class="count"></span>
+<span class="comment-text1">评论</span>
+</div>
+<div class="pack-up">
+收起
+<i class="iconfont icon-shangjiantou"></i>
+</div>
+</div>
+<div class="comment-wrap none">
+<div class="cifnews_comment" data-id="1847" data-type="answer"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="ask-detail__right">
+<div class="ask-detail__right--answer">
+<div class="title">类似回答</div>
+<div class="content">
+</div>
+</div>
+</div>
+</div>
+<script src="https://static1.cifnews.com/common/js/cifnews_common1.min.js?v=3291e81cf00442ac45dad97290e18a20"></script>
+<script src="https://static1.cifnews.com/common/js/ssoapi.js?v=3b204cb817d20e42b217946bfcf00b84" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/plug/vue/vue.min.js?v=0a9a4681294d8c5f476687eea6e74842"></script>
+<script src="https://static1.cifnews.com/plug/element/index.js?v=a4c5f47929d76407bb24614d5614fa05"></script>
+<script src="https://static1.cifnews.com/common/viewer/viewer.min.js?v=3679dfbb07e4b0801060f9468804b6d5"></script>
+<script src="https://static1.cifnews.com/plug/swiper/swiper.min.js?v=bc50849111663577c0eab162d4271bca" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/layer/layer.js?v=556bcef90f730b2e298ebc7f62f93202" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/comment/js/comment.js?v=5300fbb8b8302131a5cf06a6c0727679" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/js/t.js?v=598f04536447abd1023c76eb3056f410" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_common.js?v=9cc03e4effa3c4c21562e9e3353e7b96" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_detail.js?v=9837411bd6cef8522b345c0ca1337066" type="text/javascript"></script>
+</body>
+<script>model ={"id":2013,"title":"eMAG FBE\u8D39\u7528\u600E\u4E48\u7B97","content":"","imgUrls":[],"status":"ANSWERED","gid":1000489466,"userName":"Scilence","userHead":"https:\/\/static1.cifnews.com\/virtual-avatar\/0a\/my_200000924.jpg","tags":[{"globalTagKey":"emagmarketplace","globalTagTitle":"eMAG","categoryTitle":"\u5E73\u53F0","categoryKey":"platform"}],"tagKeyStr":"emagmarketplace","tagTitleStr":"eMAG","answers":[{"id":1847,"content":"\u8D39\u7528\u6784\u6210\u8981\u7D20\n1.\u4EA7\u54C1\u91CD\u91CF\uFF08Weight\uFF09\uFF1A\u4EE5\u514B\uFF08grams\uFF09\u4E3A\u5355\u4F4D\uFF0C\u5F71\u54CD\u8FD0\u8F93\u548C\u5904\u7406\u6210\u672C\u3002\n2.\u4EA7\u54C1\u5C3A\u5BF8\uFF08Dimensions\uFF09\uFF1A\u5305\u62EC\u957F\u5EA6\uFF08Length\uFF09\u3001\u5BBD\u5EA6\uFF08Width\uFF09\u548C\u9AD8\u5EA6\uFF08Height\uFF09\uFF0C\u901A\u5E38\u4EE5\u6BEB\u7C73\uFF08mm\uFF09\u4E3A\u5355\u4F4D\uFF0C\u51B3\u5B9A\u4ED3\u50A8\u7A7A\u95F4\u7684\u4F7F\u7528\u3002\n3.\u5B58\u50A8\u8D39\u7528\uFF1A\u6839\u636E\u5360\u7528\u7684\u4F53\u79EF\uFF08\u7ACB\u65B9\u7C73m\u00B3\uFF09\u548C\u5B58\u50A8\u65F6\u95F4\u8BA1\u7B97\u3002\n4.\u8BA2\u5355\u5904\u7406\u8D39\uFF08Order Fee\uFF09\uFF1A\u4E0E\u8BA2\u5355\u6570\u91CF\u76F8\u5173\u7684\u56FA\u5B9A\u8D39\u7528\u3002\n5.\u4ED3\u5E93\u4E0B\u67B6\u8D39\uFF08Removal Fee\uFF09\uFF1A\u5546\u54C1\u4ECE\u4ED3\u5E93\u79FB\u9664\u65F6\u4EA7\u751F\u7684\u8D39\u7528\u3002\n6.\u9500\u6BC1\u8D39\uFF08Disposal Fee\uFF09\uFF1A\u5BF9\u4E8E\u65E0\u6CD5\u518D\u9500\u552E\u7684\u5546\u54C1\u5904\u7406\u8D39\u7528\u3002\n\u8D39\u7528\u8BA1\u7B97\u6B65\u9AA4\n1.\u786E\u5B9A\u4EA7\u54C1\u4FE1\u606F\uFF1A\u8BB0\u5F55\u6BCF\u4E2A\u4EA7\u54C1\u7684\u91CD\u91CF\u548C\u5C3A\u5BF8\u3002\n2.\u8BA1\u7B97\u4F53\u79EF\uFF1A\u6839\u636E\u4EA7\u54C1\u7684\u957F\u5BBD\u9AD8\u8BA1\u7B97\u4F53\u79EF\uFF08m\u00B3\uFF09\u3002\n3.\u9009\u62E9\u5E01\u79CD\u548C\u6C47\u7387\uFF1A\u6839\u636E\u4EA4\u6613\u5E01\u79CD\u548C\u5F53\u524D\u6C47\u7387\u5C06\u8D39\u7528\u8F6C\u6362\u4E3A\u9002\u7528\u8D27\u5E01\u3002\n4.\u9009\u62E9\u65F6\u95F4\uFF1A\u786E\u5B9A\u5546\u54C1\u5B58\u50A8\u7684\u65F6\u95F4\u8303\u56F4\uFF0C\u51AC\u5B63\uFF08January - September\uFF09\u8D39\u7528\u53EF\u80FD\u7565\u9AD8\u3002\n5.\u5E94\u7528PLC\u4EE3\u7801\uFF1APLC\uFF08Product Lookup Code\uFF09\u662Femag\u5E73\u53F0\u5BF9\u6BCF\u4E2A\u4EA7\u54C1\u7C7B\u522B\u7684\u7279\u5B9A\u7F16\u7801\uFF0C\u5173\u8054\u5177\u4F53\u7684\u8D39\u7528\u6807\u51C6\u3002\n\u7279\u5B9A\u8D39\u7528\u9879\u76EE\n\u00B7 \u8BA2\u5355\u5904\u7406\u8D39\uFF1A\u6839\u636EPLC\u4EE3\u7801\u548C\u8BA2\u5355\u6570\u91CF\u8BA1\u7B97\u3002\n\u00B7 \u4ED3\u5E93\u4E0B\u67B6\u8D39\u548C\u9500\u6BC1\u8D39\uFF1A\u6839\u636E\u5546\u54C1\u7684PLC\u4EE3\u7801\u548C\u5904\u7406\u6570\u91CF\u786E\u5B9A\u3002\n \u5B58\u50A8\u8D39\u7528\n\u5B58\u50A8\u8D39\u7528\u6309\u7167\u5360\u7528\u7684\u4F53\u79EF\uFF08m\u00B3\uFF09\u548C\u5929\u6570\u8BA1\u7B97\uFF0C\u5206\u4E3A\u4E24\u4E2A\u5B63\u8282\u6807\u51C6\uFF1A\n\u00B7 \u65FA\u5B63\uFF08October - December\uFF09\uFF1A\u8D39\u7528\u8F83\u9AD8\uFF0C\u4EE51.66 RON\/m\u00B3\/day\u4E3A\u6807\u51C6\u3002\n\u00B7 \u6DE1\u5B63\uFF08January - September\uFF09\uFF1A\u8D39\u7528\u8F83\u4F4E\uFF0C\u4EE51 RON\/m\u00B3\/day\u4E3A\u6807\u51C6\u3002\n\u6CE8\u610F\u4E8B\u9879\n\u00B7 \u786E\u4FDD\u6240\u6709\u4EA7\u54C1\u4FE1\u606F\u51C6\u786E\u65E0\u8BEF\uFF0C\u4EE5\u514D\u5F71\u54CD\u8D39\u7528\u8BA1\u7B97\u3002\n\u00B7 \u8003\u8651\u5230\u8D27\u5E01\u6C47\u7387\u6CE2\u52A8\uFF0C\u5B9A\u671F\u66F4\u65B0\u6C47\u7387\u4EE5\u786E\u4FDD\u8D39\u7528\u8F6C\u6362\u7684\u51C6\u786E\u6027\u3002\n\u00B7 \u5229\u7528emag\u5E73\u53F0\u63D0\u4F9B\u7684\u5DE5\u5177\u548C\u8D44\u6E90\uFF0C\u4EE5\u83B7\u5F97\u66F4\u8BE6\u7EC6\u7684\u8D39\u7528\u4F30\u7B97\u548C\u4F18\u5316\u5EFA\u8BAE\u3002","questionId":2013,"imgUrls":[],"gid":1001729211,"userName":"\u96E8\u679C\u95EE\u7B54\u5C0F\u52A9\u624B","userHead":"https:\/\/img.cifnews.com\/form\/3707\/20230109\/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image\/crop,x_18,y_15,h_355,w_355","originModel":null,"statCount":null,"updatedBy":null,"creator":"\u5434\u667A\u7FA4(excel\u5BFC\u5165)","createTime":"2024-09-01 10:00:00","createTimeStr":"2024-09-01","modifiedTime":"2024-09-01 10:00:00","userCount":null,"isShow":true}],"statCount":{"pv":871,"likeCount":null,"subscribeCount":null,"pvModifiedTime":"2025-07-16 00:00:00"},"pv":871,"createTime":"2024-08-31 10:00:00","createTimeStr":"2024-08-31"};</script>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="cifnews_page" key="questionDetail" module="b36" page="p2" tag="airwallex" data-fetch-property="page_type=详情页;business_module=问答;device_type=pc;$title=如何成为 Amazon 亚马逊卖家并在 Amazon 亚马逊平台开店？-雨果问答;page_terms=问题详情页;item_type=question;item_id=2059;item_title=如何成为 Amazon 亚马逊卖家并在 Amazon 亚马逊平台开店？;item_create_time=2025-02-02 10:00:00.0;item_tag=空中云汇;item_tag_key=airwallex;item_provider=哼！要你管">
+<title>如何成为 Amazon 亚马逊卖家并在 Amazon 亚马逊平台开店？-雨果问答</title>
+<meta name="keywords" content="如何成为 Amazon 亚马逊卖家并在 Amazon 亚马逊平台开店？"/>
+<meta name="description" content="如何成为 Amazon 亚马逊卖家并在 Amazon 亚马逊平台开店？"/>
+<link href="https://static1.cifnews.com/common/css/ali_iconfont.css?v=5b43ae1222190187e2d01b85b076cdfd" rel="stylesheet"/>
+<link rel="stylesheet" href="https://static1.cifnews.com/plug/element/theme-chalk/index.css?v=d92dc15263215a0835823b6e56a59bd2">
+<link href="https://static1.cifnews.com/plug/swiper/swiper.min.css?v=6c1ec3a038a24ce46e374fc4ba26ea95" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/viewer/viewer.min.css?v=79e5f2c708a17b6876694821ddd5c839" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_common.css?v=85626087304c615cebc3ea2dd5d44efe" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/common/comment/css/comment.css?v=93454761ebb2de590424c768877a1ed3" rel="stylesheet"/>
+<link href="https://static1.cifnews.com/ask/css/ask_detail.css?v=6187b3f9f9650370ececb8c55a545c72" rel="stylesheet"/>
+<script src="https://g.alicdn.com/frontend-lib/frontend-lib/2.3.74/antidom.js"></script><script src="https://o.alicdn.com/frontend-lib/common-lib/jquery1.min.js"></script><script src="https://static1.cifnews.com/plug/jquery/jquery.min.js?v=895323ed2f7258af4fae2c738c8aea49"></script>
+<script src="https://static1.cifnews.com/common/js/spm.js?v=de27d901b0c0c9765b95d48314f69abc"></script>
+<script src="https://static1.cifnews.com/common/js/d/d.sensor.js?v=9e2ba45b95d3ce4dfcbc226289aabd9d"></script>
+<script src="https://g.alicdn.com/AWSC/AWSC/awsc.js"></script>
+</head>
+<body>
+<div class="ask-head" v-clock>
+<div class="ask-head__content">
+<a target="_blank" href="../html/2020yearend.html" class="img_index">
+<img src="https://img.cifnews.com/dev/20230207/5f17c47ceb6c423ba56bc56f009b1960.png">
+</a>
+<span class="line"></span>
+<a target="_blank" href="index.html" class="img_question_index">
+<img src="https://img.cifnews.com/dev/20230207/8890b97e46d14a51bf325694ad8317c4.png">
+</a>
+<div class="ask-head__search">
+<input v-model="search" @input="handleSearch" @focus="handleFocus" @blur="handleBlur"></input>
+<div class="btn is-search" @click="gotoSearchPage">搜索答案</div>
+<div class="btn is-ask" @click="openAsk">我要提问</div>
+<div class="ask-head__search--wrap" v-show="search && searchs.length && searchRecommendFlag">
+<div class="item" v-for="(item, index) in searchs" :key="item" @click="chooseItem(item, 'search')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__needlogin" @click="needLogin">
+<img src="https://img.cifnews.com/dev/20230206/079a041cd87848c18eac84692c89ffff.png">
+<span>登录</span>
+</div>
+</div>
+<div class="ask-head__dialog" v-if="askDialog">
+<i class="iconfont icon-guanbi1 guanbi" @click="openAsk"></i>
+<div class="ask-head__dialog--title">
+<i class="iconfont icon-wenhao wenhao"></i>
+<span class="text">提问</span>
+<div class="how-question" @click="questionWarningHandle">如何提问</div>
+</div>
+<div class="ask-head__dialog--input">
+<input placeholder="请输入您要提问的问题（8-40字）" v-model="dialogSearch" maxlength="40" @input="handleSearch($event, 'dialog')">
+<div class="ask-head__dialog--len is-input">
+<span>{{inputLen}}</span>/<span>40</span>
+</div>
+<div class="wrap" v-if="dialogSearch && dialogSearchs.length && recommendFlag">
+<div class="recommand">
+<span>推荐问答</span>
+<span class="close" @click="closeRecommand">关闭</span>
+</div>
+<div class="item" v-for="(item, index) in dialogSearchs" :key="item" @click="chooseItem(item, 'dialog')" v-html="item.title">
+</div>
+</div>
+</div>
+<div class="ask-head__dialog--text">
+<textarea placeholder="请输入问题的补充说明" v-model="dialogText" maxlength="1000" @input="textareaLen = $event.target.value.length;"></textarea>
+<div class="ask-head__dialog--len">
+<span>{{textareaLen}}</span>/<span>1000</span>
+</div>
+</div>
+<div class="ask-head__dialog--upload">
+<el-upload style="display:inline;" list-type="picture-card" :file-list="files" :on-change="fileChange" limit="9" :auto-upload="false" multiple :before-upload="uploadFile" :on-remove="handleRemove">
+<i class="el-icon-plus"></i>
+<div slot="file" slot-scope="{file}">
+<img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+<div class="close" @click="handleRemove(file)">
+<i class="iconfont icon-guanbi1 icon-close"></i>
+</div>
+</div>
+</el-upload>
+<span class="text" v-show="files.length < 9">最多上传<span class="count">9</span>张图</span>
+</div>
+<div class="ask-head__dialog--submit" @click="beforeSubmit">
+提交
+</div>
+</div>
+<div class="ask-head__result" v-if="askInfo">
+<i class="iconfont icon-guanbi1 guanbi" @click="closeResult"></i>
+<img src="https://img.cifnews.com/dev/20230109/dd17f09a90b248c9bf9cb7fb7e50b72d.png" class="icon" v-if="askSuccess">
+<img src="https://img.cifnews.com/dev/20230109/40b34ba72cfd42b482e00789ac5ae14e.png" class="icon" v-else>
+<div class="title" v-if="askSuccess"> 提问成功</div>
+<div class="title" v-else> 等待审核</div>
+<div class="text" v-if="askSuccess">
+<div class="text-small1">提交后将在24小时内获得回答(非工作日可能延期回答)</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text" v-else>
+<div class="text-small1">工作人员将尽快审核您的提问，审核通过后将在24小时内获得回答(非工作日可能延期回答)
+</div>
+<div class="text-small2">可在右上角进入 <a class="goto" @click="goto" target="_blank">个人中心-我的提问</a>
+查看进度
+</div>
+</div>
+<div class="text">
+或扫码下载“雨果跨境”app关注提问进度
+</div>
+<div class="scan">
+<img class="cifnews_track_qrCode" data-origin-medium="pc_wenda" src="https://static1.cifnews.com/img/default_qrcode.png">
+</div>
+<div class="info">安装成功后请打开App推送权限</div>
+</div>
+</div>
+<div class="ask-ad cifnews_block" data-cifnews-block-key="abanner" style="display: none;">
+<a class="cifnews_block_linkUrl" target="_blank" href="2059.html">
+<img class="cifnews_block_imgUrl" src="2059.html" data-block-img-width="1000" data-block-img-height="100" />
+</a>
+</div>
+</div>
+<div class="ask-detail" questionId="2059">
+<div class="ask-detail__left">
+<div class="ask-detail__left--question">
+<div class="title">如何成为 Amazon 亚马逊卖家并在 Amazon 亚马逊平台开店？</div>
+<div class="subscribe question-btn1 none">
+<span class="cifnews_number_status" data-cifnews-number-source="subscribe" data-cifnews-number-key="2059" data-cifnews-number-type="question" data-cifnews-login="true">
+<a class="btn cifnews_status_off">+ 关注</a>
+<a class="btn cifnews_status_on is-attentioned" style="display: none;">已关注</a>
+</span>
+</div>
+</div>
+<div class="ask-detail__left--miaoshu">
+<input type="checkbox" id="exp" style="display: none;">
+<div class="text is-shenhe question-btn2 none">提问审核中</div>
+<div class="marked">
+<img src="https://img.cifnews.com/dev/20230110/f98c2d286675467b907ad5a4cf8320e3.png">
+<div class="marked-cell">
+<a target="_blank" href="https://www.cifnews.com/question/index/airwallex">空中云汇</a>
+</div>
+</div>
+</div>
+<div class="ask-detail__left--answer">
+<div class="head">
+<div class="text" data-len="1">
+<span>1</span>个回答
+</div>
+<div class="line"></div>
+</div>
+<div class="item" data-id="1893">
+<div class="info">
+<img src="https://img.cifnews.com/form/3707/20230109/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image/crop,x_18,y_15,h_355,w_355">
+<div class="name">
+<span>雨果问答小助手</span>
+<span class="time">02-03</span>
+</div>
+</div>
+<input type="checkbox" id="exp_item_0">
+<div class="wrap">
+<div class="content">
+<label for="exp_item_0">阅读全文<i class="iconfont icon-xiajiantou"></i></label><span class="content-span">Amazon 亚马逊卖家入驻流程简单，个人或企业均可轻松开店。
+1. 填写申请表并注册卖家账户
+首先，您需要访问 Amazon 亚马逊卖家中心注册账户，并上传以下资料。
+商业文件：公司注册证书及商业登记条例
+法定代表人经由有效政府签发的身份证件或护照
+国际通用的信用卡（VISA 维萨信用卡或 Mastercard 万事达卡）
+联系信息：公司的电子邮箱地址及电话号码
+用于收付款的银行账户
+可选：税务信息（仅适用于在 Amazon 亚马逊美国站上进行销售的情况）或“了解你的客户”审核（仅适用于 Amazon 亚马逊欧盟站）
+2. 身份验证
+上述信息验证通过后，您将收到完成身份验证的提示。这一步骤包括提交身份证件照片，可选择自拍或与 Amazon Associates 亚马逊联盟的工作人员进行视频通话。一般来说，您需要在 72 小时内完成自拍验证。
+完成身份验证后，您即可登陆卖家中心账户，在 Amazon 亚马逊上开店，并面向全球超过 3.1 亿的 Amazon 亚马逊客户销售商品。
+福利发送：亚马逊收款提现限时免费申请中，复制立即申请（https://www.airwallex.com/cn/2023landingpage/gtpn?utm_source=affiliate_direct&amp;utm_medium=affiliates&amp;utm_campaign=v01_cn_cn_ib_dg_prtmk_bofu_cifnews_wenzhang
+）</span></div>
+</div>
+<div class="likeinfo">
+<div class="like-wrap">
+<div class="cifnews_number_status" data-cifnews-number-type="answer" data-cifnews-number-id="1893" data-cifnews-number-source="like" data-like-type="LIKE" data-cifnews-login="true">
+<div class="cifnews_status_off like is-hover"></div>
+<div class="cifnews_status_on like" style="display: none;"></div>
+<span class="handle-like__count cifnews_number_count" data-cifnews-number-type="answer" data-cifnews-number-source="like" data-cifnews-number-backup="0" data-cifnews-number-display="0" data-cifnews-number-id="1893"></span>
+</div>
+<span class="line"></span>
+<div class="cifnews_number_status container" data-cifnews-number-type="answer" data-cifnews-number-id="1893" data-cifnews-number-source="hate" data-like-type="HATE" data-cifnews-login="true">
+<div class="cifnews_status_off hate is-hover">
+</div>
+<div class="cifnews_status_on hate" style="display: none;">
+</div>
+</div>
+</div>
+<div class="comment">
+<div class="img">
+</div>
+<span class="count"></span>
+<span class="comment-text1">评论</span>
+</div>
+<div class="pack-up">
+收起
+<i class="iconfont icon-shangjiantou"></i>
+</div>
+</div>
+<div class="comment-wrap none">
+<div class="cifnews_comment" data-id="1893" data-type="answer"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="ask-detail__right">
+<div class="ask-detail__right--answer">
+<div class="title">类似回答</div>
+<div class="content">
+</div>
+</div>
+</div>
+</div>
+<script src="https://static1.cifnews.com/common/js/cifnews_common1.min.js?v=3291e81cf00442ac45dad97290e18a20"></script>
+<script src="https://static1.cifnews.com/common/js/ssoapi.js?v=3b204cb817d20e42b217946bfcf00b84" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/plug/vue/vue.min.js?v=0a9a4681294d8c5f476687eea6e74842"></script>
+<script src="https://static1.cifnews.com/plug/element/index.js?v=a4c5f47929d76407bb24614d5614fa05"></script>
+<script src="https://static1.cifnews.com/common/viewer/viewer.min.js?v=3679dfbb07e4b0801060f9468804b6d5"></script>
+<script src="https://static1.cifnews.com/plug/swiper/swiper.min.js?v=bc50849111663577c0eab162d4271bca" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/layer/layer.js?v=556bcef90f730b2e298ebc7f62f93202" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/comment/js/comment.js?v=5300fbb8b8302131a5cf06a6c0727679" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/common/js/t.js?v=598f04536447abd1023c76eb3056f410" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_common.js?v=9cc03e4effa3c4c21562e9e3353e7b96" type="text/javascript"></script>
+<script src="https://static1.cifnews.com/ask/js/ask_detail.js?v=9837411bd6cef8522b345c0ca1337066" type="text/javascript"></script>
+</body>
+<script>model ={"id":2059,"title":"\u5982\u4F55\u6210\u4E3A Amazon \u4E9A\u9A6C\u900A\u5356\u5BB6\u5E76\u5728 Amazon \u4E9A\u9A6C\u900A\u5E73\u53F0\u5F00\u5E97\uFF1F","content":"","imgUrls":[],"status":"ANSWERED","gid":1000378512,"userName":"\u54FC\uFF01\u8981\u4F60\u7BA1","userHead":"https:\/\/static1.cifnews.com\/virtual-avatar\/0a\/my_100000457.jpg","tags":[{"globalTagKey":"airwallex","globalTagTitle":"\u7A7A\u4E2D\u4E91\u6C47","categoryTitle":"\u670D\u52A1\u5546","categoryKey":"service-provider"}],"tagKeyStr":"airwallex","tagTitleStr":"\u7A7A\u4E2D\u4E91\u6C47","answers":[{"id":1893,"content":"Amazon \u4E9A\u9A6C\u900A\u5356\u5BB6\u5165\u9A7B\u6D41\u7A0B\u7B80\u5355\uFF0C\u4E2A\u4EBA\u6216\u4F01\u4E1A\u5747\u53EF\u8F7B\u677E\u5F00\u5E97\u3002\n\n1. \u586B\u5199\u7533\u8BF7\u8868\u5E76\u6CE8\u518C\u5356\u5BB6\u8D26\u6237\n\n\u9996\u5148\uFF0C\u60A8\u9700\u8981\u8BBF\u95EE Amazon \u4E9A\u9A6C\u900A\u5356\u5BB6\u4E2D\u5FC3\u6CE8\u518C\u8D26\u6237\uFF0C\u5E76\u4E0A\u4F20\u4EE5\u4E0B\u8D44\u6599\u3002\n\n\u5546\u4E1A\u6587\u4EF6\uFF1A\u516C\u53F8\u6CE8\u518C\u8BC1\u4E66\u53CA\u5546\u4E1A\u767B\u8BB0\u6761\u4F8B\n\n\u6CD5\u5B9A\u4EE3\u8868\u4EBA\u7ECF\u7531\u6709\u6548\u653F\u5E9C\u7B7E\u53D1\u7684\u8EAB\u4EFD\u8BC1\u4EF6\u6216\u62A4\u7167\n\n\u56FD\u9645\u901A\u7528\u7684\u4FE1\u7528\u5361\uFF08VISA \u7EF4\u8428\u4FE1\u7528\u5361\u6216 Mastercard \u4E07\u4E8B\u8FBE\u5361\uFF09\n\n\u8054\u7CFB\u4FE1\u606F\uFF1A\u516C\u53F8\u7684\u7535\u5B50\u90AE\u7BB1\u5730\u5740\u53CA\u7535\u8BDD\u53F7\u7801\n\n\u7528\u4E8E\u6536\u4ED8\u6B3E\u7684\u94F6\u884C\u8D26\u6237\n\n\u53EF\u9009\uFF1A\u7A0E\u52A1\u4FE1\u606F\uFF08\u4EC5\u9002\u7528\u4E8E\u5728 Amazon \u4E9A\u9A6C\u900A\u7F8E\u56FD\u7AD9\u4E0A\u8FDB\u884C\u9500\u552E\u7684\u60C5\u51B5\uFF09\u6216\u201C\u4E86\u89E3\u4F60\u7684\u5BA2\u6237\u201D\u5BA1\u6838\uFF08\u4EC5\u9002\u7528\u4E8E Amazon \u4E9A\u9A6C\u900A\u6B27\u76DF\u7AD9\uFF09\n\n2. \u8EAB\u4EFD\u9A8C\u8BC1\n\n\u4E0A\u8FF0\u4FE1\u606F\u9A8C\u8BC1\u901A\u8FC7\u540E\uFF0C\u60A8\u5C06\u6536\u5230\u5B8C\u6210\u8EAB\u4EFD\u9A8C\u8BC1\u7684\u63D0\u793A\u3002\u8FD9\u4E00\u6B65\u9AA4\u5305\u62EC\u63D0\u4EA4\u8EAB\u4EFD\u8BC1\u4EF6\u7167\u7247\uFF0C\u53EF\u9009\u62E9\u81EA\u62CD\u6216\u4E0E Amazon Associates \u4E9A\u9A6C\u900A\u8054\u76DF\u7684\u5DE5\u4F5C\u4EBA\u5458\u8FDB\u884C\u89C6\u9891\u901A\u8BDD\u3002\u4E00\u822C\u6765\u8BF4\uFF0C\u60A8\u9700\u8981\u5728 72 \u5C0F\u65F6\u5185\u5B8C\u6210\u81EA\u62CD\u9A8C\u8BC1\u3002\n\n\u5B8C\u6210\u8EAB\u4EFD\u9A8C\u8BC1\u540E\uFF0C\u60A8\u5373\u53EF\u767B\u9646\u5356\u5BB6\u4E2D\u5FC3\u8D26\u6237\uFF0C\u5728 Amazon \u4E9A\u9A6C\u900A\u4E0A\u5F00\u5E97\uFF0C\u5E76\u9762\u5411\u5168\u7403\u8D85\u8FC7 3.1 \u4EBF\u7684 Amazon \u4E9A\u9A6C\u900A\u5BA2\u6237\u9500\u552E\u5546\u54C1\u3002\n\u798F\u5229\u53D1\u9001\uFF1A\u4E9A\u9A6C\u900A\u6536\u6B3E\u63D0\u73B0\u9650\u65F6\u514D\u8D39\u7533\u8BF7\u4E2D\uFF0C\u590D\u5236\u7ACB\u5373\u7533\u8BF7\uFF08https:\/\/www.airwallex.com\/cn\/2023landingpage\/gtpn?utm_source=affiliate_direct\u0026utm_medium=affiliates\u0026utm_campaign=v01_cn_cn_ib_dg_prtmk_bofu_cifnews_wenzhang \n\uFF09","questionId":2059,"imgUrls":[],"gid":1001729211,"userName":"\u96E8\u679C\u95EE\u7B54\u5C0F\u52A9\u624B","userHead":"https:\/\/img.cifnews.com\/form\/3707\/20230109\/24b0c18c04cc40c1a175413384de6faf.jpg?x-oss-process=image\/crop,x_18,y_15,h_355,w_355","originModel":null,"statCount":null,"updatedBy":null,"creator":"\u5434\u667A\u7FA4(excel\u5BFC\u5165)","createTime":"2025-02-03 10:00:00","createTimeStr":"02-03","modifiedTime":"2025-02-03 10:00:00","userCount":null,"isShow":true}],"statCount":{"pv":42,"likeCount":null,"subscribeCount":null,"pvModifiedTime":"2025-07-16 00:00:00"},"pv":42,"createTime":"2025-02-02 10:00:00","createTimeStr":"02-02"};</script>
+</html>
