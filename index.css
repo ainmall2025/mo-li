@@ -870,7 +870,7 @@ a {
               border-radius: 13px;
       font-size: 12px;
       padding: 0 9px;
-      color: #f60;
+      color: #275559;
       background: #fff6f1;
       border: 1px solid #f9cab1;
       margin-left: 10px; }
@@ -3270,7 +3270,7 @@ a {
     .header-search-text .text.on {
       color: #f00; }
     .header-search-text .text:hover {
-      color: #f60; }
+      color: #275559; }
 
 .header-search__hover {
   position: absolute;
@@ -3304,7 +3304,7 @@ a {
         -ms-flex-align: center;
             align-items: center; }
     .header-search__hover .item:hover {
-      color: #f60; }
+      color: #275559; }
     .header-search__hover .item.is-type1::after {
       content: "";
       display: inline-block;
@@ -3365,7 +3365,7 @@ a {
     content: '';
     width: 6px;
     height: 6px;
-    background: #f60;
+    background: #275559;
     -webkit-border-radius: 50%;
             border-radius: 50%;
     position: absolute;
@@ -3761,7 +3761,7 @@ a {
       border: 1px solid #275559;
       margin-left: 19px;
       font-size: 14px;
-      color: #f60;
+      color: #275559;
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
@@ -3779,7 +3779,7 @@ a {
         background-repeat: no-repeat;
         margin-left: 10px; }
       .cif-selectionModule__title .more:hover {
-        background: #f60;
+        background: #275559;
         color: #fff; }
         .cif-selectionModule__title .more:hover::after {
           background-image: url("https://img.cifnews.com/dev/20220701/eb3b6fdbdf664bf9b62e3f5b9d277b47.png"); }
@@ -3794,7 +3794,7 @@ a {
         display: none; }
       .cif-selectionModule__title.is-type1 .more:hover {
         background: none;
-        color: #f60; }
+        color: #275559; }
   .cif-selectionModule__cont {
     padding-top: 26px; }
 
@@ -4033,7 +4033,7 @@ a {
         -ms-flex-align: center;
             align-items: center; }
     .cif-selection__calendar .more:hover {
-      color: #f60; }
+      color: #275559; }
   .cif-selection__calendar .calendar__title {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -4072,7 +4072,7 @@ a {
         margin-left: 20px; }
       .cif-selection__calendar .calendar__title .tab.on, .cif-selection__calendar .calendar__title .tab:hover {
         background: rgba(255, 102, 0, 0.1);
-        color: #f60; }
+        color: #275559; }
     .cif-selection__calendar .calendar__title .swiper__btn {
       width: 36px;
       height: 36px;
@@ -4108,7 +4108,7 @@ a {
         right: 0; }
       .cif-selection__calendar .calendar__title .swiper__btn:hover {
         color: #fff;
-        background: #f60; }
+        background: #275559; }
   .cif-selection__calendar .calendar__cont {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -4174,7 +4174,7 @@ a {
       display: inline-block;
       font-family: 'iconfont' !important;
       font-weight: normal;
-      color: #f60;
+      color: #275559;
       margin-left: 8px; }
   .cif-selection__calendar .calendar__card__describe {
     font-size: 14px;
@@ -4203,7 +4203,7 @@ a {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    color: #f60;
+    color: #275559;
     font-weight: 400;
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
@@ -4280,11 +4280,11 @@ a {
               border-radius: 16px;
       background: #fff;
       font-size: 14px;
-      color: #f60; }
+      color: #275559; }
       .cif-selection__category .category__item .category__head__more .iconfont {
-        color: #f60; }
+        color: #275559; }
       .cif-selection__category .category__item .category__head__more:hover {
-        background: #f60;
+        background: #275559;
         color: #fff; }
         .cif-selection__category .category__item .category__head__more:hover .iconfont {
           color: #fff; }
@@ -4401,7 +4401,7 @@ a {
           .cif-selection__field .field__item .field__body__head .tabs .tab:first-child::before {
             display: none; }
         .cif-selection__field .field__item .field__body__head .tabs .tab.on, .cif-selection__field .field__item .field__body__head .tabs .tab:hover {
-          color: #f60; }
+          color: #275559; }
     .cif-selection__field .field__item .field__body__head .more {
       -ms-flex-negative: 0;
           flex-shrink: 0; }
@@ -4553,7 +4553,7 @@ a {
     height: 100%; }
 
 .cif-selectionExhibition {
-  --themeColor: #f60;
+  --themeColor: #275559;
   min-width: 1060px; }
   .cif-selectionExhibition .swiper-button-next,
   .cif-selectionExhibition .swiper-button-prev {
@@ -4727,7 +4727,7 @@ a {
       height: 150px;
       border: 1px solid #e8e8e8;
       background: #fefcfa;
-      color: #f60;
+      color: #275559;
       -ms-flex-negative: 0;
           flex-shrink: 0;
       margin-left: 20px;
